@@ -1,0 +1,23 @@
+.custom-nav {
+  padding: 10px 15px;
+  font-size: 1rem;
+  border-radius: 5px;
+  color: #333;
+  transition: all 0.3s ease;
+  text-decoration: none !important;
+  display: inline-block;
+}
+
+/* Hover effect */
+.custom-nav:hover {
+  background-color: #f0f0f0;
+  color: #007bff;
+}
+
+/* Active link styling */
+.custom-nav.active {
+  background-color: #007bff !important;
+  color: #fff !important;
+  font-weight: bold;
+  border-bottom: 3px solid #0056b3;
+}
