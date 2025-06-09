@@ -2,7 +2,10 @@ package com.example.leadmanager.controller;
 
 import com.example.leadmanager.dto.LeadRequest;
 import com.example.leadmanager.model.*;
-import com.example.leadmanager.model.enums.*;
+import com.example.leadmanager.model.enums.LeadCategory;
+import com.example.leadmanager.model.enums.LeadOutcome;
+import com.example.leadmanager.model.enums.LeadStatus;
+import com.example.leadmanager.model.enums.Role;
 import com.example.leadmanager.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,7 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDate;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -53,24 +56,30 @@ public class LeadController {
     }
 
     @GetMapping("/user/{userId}")
-    public List<Lead> getLeadsByUser(
+    public ResponseEntity<List<Lead>> getLeadsByUser(
             @PathVariable Long userId,
             @RequestParam(required = false) String search) {
 
         User user = userRepository.findById(userId).orElse(null);
         if (user == null) {
-            return Collections.emptyList(); // Return empty if user not found
+            return ResponseEntity.ok(Collections.emptyList()); // Return empty list if user not found
         }
 
-        // If a search term is provided, filter by it
+        List<Lead> leads;
+
         if (search != null && !search.trim().isEmpty()) {
             String keyword = "%" + search.trim().toLowerCase() + "%";
-            return leadRepository.findByAssignedToAndKeyword(user, keyword);
+            leads = leadRepository.findByAssignedToAndKeyword(user, keyword);
+        } else {
+            leads = leadRepository.findByAssignedTo(user);
         }
 
-        // Return all leads if no search term is provided
-        return leadRepository.findByAssignedTo(user);
+        // Optional: sort by createdAt descending if not already handled in the repository
+        leads.sort(Comparator.comparing(Lead::getCreatedAt).reversed());
+
+        return ResponseEntity.ok(leads);
     }
+
 
 
     @PostMapping("/create")
@@ -173,7 +182,7 @@ public class LeadController {
             @PathVariable Long id,
             @RequestParam String status,
             @RequestParam(required = false) String note,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate followUpDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime followUpDate,
             @RequestParam(required = false) MultipartFile file,
             @RequestParam(required = false) String closeReason,
             @RequestParam(required = false) String dealValue,
@@ -308,18 +317,37 @@ public class LeadController {
             FollowUp followUp = new FollowUp();
             followUp.setLead(lead);
             followUp.setNote(note);
-            followUp.setFollowUpDate(followUpDate.atStartOfDay());
+            followUp.setFollowUpDate(followUpDate);
             followUpRepository.save(followUp);
+
+            // Calculate time left for reminder message
+            LocalDateTime now = LocalDateTime.now();
+            Duration duration = Duration.between(now, followUpDate);
+
+            long hours = duration.toHours();
+            long minutes = duration.toMinutes() % 60;
+
+            String timeLeft;
+            if (hours > 0) {
+                timeLeft = hours + (hours == 1 ? " hour" : " hours");
+                if (minutes > 0) {
+                    timeLeft += " " + minutes + " minutes";
+                }
+            } else if (minutes > 0) {
+                timeLeft = minutes + (minutes == 1 ? " minute" : " minutes");
+            } else {
+                timeLeft = "moments";
+            }
 
             Reminder reminder = Reminder.builder()
                     .userId(user.getId()) // or whoever should receive the reminder
-                    .message("Follow up with " + lead.getName())
-                    .followUpTime(followUpDate.atStartOfDay())
+                    .message("Follow up with " + lead.getName() + " in " + timeLeft)
+                    .followUpTime(followUpDate)
+                    .leadId(lead.getId())
                     .notified(false)
                     .build();
 
             reminderRepository.save(reminder);
-
 
             // 🔹 Add follow-up activity
             LeadActivity followUpActivity = LeadActivity.builder()
@@ -348,7 +376,6 @@ public class LeadController {
                 notificationRepository.save(notification);
             }
         }
-
 
         return ResponseEntity.ok(lead);
     }
@@ -392,12 +419,13 @@ public class LeadController {
 
         // 2. Create new FollowUp if a new date is provided
         if (followUpDateStr != null && !followUpDateStr.isEmpty()) {
-            LocalDate newDate = LocalDate.parse(followUpDateStr);
+            LocalDateTime newDateTime = LocalDateTime.parse(followUpDateStr);
+
 
             FollowUp newFollowUp = FollowUp.builder()
                     .lead(lead)
                     .user(user)
-                    .followUpDate(newDate.atStartOfDay())
+                    .followUpDate(newDateTime)
                     .completed(false)
                     .build();
 

@@ -5,6 +5,7 @@ import com.example.leadmanager.model.enums.Role;
 import com.example.leadmanager.model.enums.Status;
 import com.example.leadmanager.repository.UserRepository;
 import com.example.leadmanager.service.MailService;
+import com.example.leadmanager.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
@@ -170,6 +172,17 @@ public class UserController {
         user.setStatus(Status.ACTIVE);
         userRepository.save(user);
         return ResponseEntity.ok("User reactivated successfully");
+    }
+
+    @Autowired
+    private UserService userService;
+
+    @GetMapping("/non-admin-users")
+    public List<User> getNonAdminUsers() {
+        return userService.getAllUsers()
+                .stream()
+                .filter(user -> user.getRole() != Role.ADMIN)
+                .collect(Collectors.toList());
     }
 
 

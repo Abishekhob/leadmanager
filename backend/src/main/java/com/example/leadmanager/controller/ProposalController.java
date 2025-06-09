@@ -1,5 +1,6 @@
 package com.example.leadmanager.controller;
 
+import com.example.leadmanager.dto.ProposalDTO;
 import com.example.leadmanager.model.Lead;
 import com.example.leadmanager.model.ProposalRequest;
 import com.example.leadmanager.model.User;
@@ -35,10 +36,6 @@ import java.util.UUID;
         private final UserRepository userRepository;
         @Autowired
         private LeadActivityRepository leadActivityRepository;
-
-
-
-
 
         @PostMapping("/request/{leadId}")
         public ResponseEntity<?> requestProposal(
@@ -164,20 +161,21 @@ import java.util.UUID;
         }
     }
 
-        // Proposals sent by current user
         @GetMapping("/sent")
         public ResponseEntity<?> getSentProposals(Principal principal) {
             User user = userRepository.findByEmail(principal.getName()).orElseThrow();
             List<ProposalRequest> sent = proposalRequestRepository.findByRequestedBy(user);
-            return ResponseEntity.ok(sent);
+            List<ProposalDTO> dtoList = sent.stream().map(ProposalDTO::new).toList();
+            return ResponseEntity.ok(dtoList);
         }
 
-        // Proposals assigned to current user
         @GetMapping("/received")
         public ResponseEntity<?> getReceivedProposals(Principal principal) {
             User user = userRepository.findByEmail(principal.getName()).orElseThrow();
             List<ProposalRequest> received = proposalRequestRepository.findByAssignedTo(user);
-            return ResponseEntity.ok(received);
+            List<ProposalDTO> dtoList = received.stream().map(ProposalDTO::new).toList();
+            return ResponseEntity.ok(dtoList);
         }
+
 
     }

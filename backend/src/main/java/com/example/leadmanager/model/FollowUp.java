@@ -1,5 +1,6 @@
 package com.example.leadmanager.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +28,7 @@ public class FollowUp {
     private User user;
 
     @Column(name = "follow_up_date", columnDefinition = "TIMESTAMP")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime followUpDate;
 
     private String note;

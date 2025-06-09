@@ -9,4 +9,6 @@ public interface UserService {
     User saveUser(User user);
     Optional<User> getUserById(Long id);
     List<User> getAllUsers();
+
+    boolean resetPassword(Long userId, String newPassword);
 }

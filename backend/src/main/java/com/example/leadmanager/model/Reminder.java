@@ -23,5 +23,9 @@ public class Reminder {
     private LocalDateTime followUpTime;
 
     private boolean notified; // true once the notification is sent
+
+    private Long leadId;
+
+
 }
 

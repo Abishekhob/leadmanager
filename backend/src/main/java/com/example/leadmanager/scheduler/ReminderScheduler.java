@@ -8,7 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Component
@@ -19,21 +20,34 @@ public class ReminderScheduler {
     private final ReminderRepository reminderRepository;
     private final ReminderNotificationService notificationService;
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(cron = "0 */5 * * * *") // Every 5 minutes
     public void checkDueReminders() {
-        LocalDateTime now = LocalDateTime.now();
-        List<Reminder> dueReminders = reminderRepository.findDueReminders(now);
+        try {
+            ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Kolkata"));
+            ZonedDateTime twoHoursFromNow = now.plusHours(2);
 
-        for (Reminder reminder : dueReminders) {
-            log.info("Reminder for user {}: {}", reminder.getUserId(), reminder.getMessage());
+            List<Reminder> dueReminders = reminderRepository.findDueReminders(
+                    now.toLocalDateTime(),
+                    twoHoursFromNow.toLocalDateTime()
+            );
 
-            // Send WebSocket notification
-            notificationService.sendReminderNotification(reminder.getUserId(), reminder.getMessage());
+            if (dueReminders.isEmpty()) {
+                log.info("No reminders due for notification at {}", now);
+                return;
+            }
 
-            reminder.setNotified(true);
-            reminderRepository.save(reminder);
+            log.info("Found {} reminders due for notification at {}", dueReminders.size(), now);
+
+            for (Reminder reminder : dueReminders) {
+                log.info("Sending reminder to user {}: {}", reminder.getUserId(), reminder.getMessage());
+                notificationService.sendReminderNotification(reminder);
+                reminder.setNotified(true);
+            }
+
+            reminderRepository.saveAll(dueReminders);
+
+        } catch (Exception e) {
+            log.error("Error checking/sending reminders", e);
         }
     }
 }
-
-
