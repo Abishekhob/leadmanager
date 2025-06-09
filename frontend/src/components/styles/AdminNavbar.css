@@ -6,6 +6,7 @@
   transition: all 0.3s ease;
   text-decoration: none !important;
   display: inline-block;
+  position: relative; /* for notification badge positioning */
 }
 
 /* Hover effect */
@@ -14,10 +15,16 @@
   color: #007bff;
 }
 
-/* Active link styling */
+/* Active link styling (clean, just color change) */
 .custom-nav.active {
-  background-color: #007bff !important;
-  color: #fff !important;
+  background-color: transparent !important; /* Remove blue background */
+  color: #007bff !important;               /* Blue text */
   font-weight: bold;
-  border-bottom: 3px solid #0056b3;
+  border-bottom: none;
+}
+
+/* Optional: remove blue outline on focus (if not keyboard accessibility concern) */
+.custom-nav:focus {
+  outline: none;
+  box-shadow: none;
 }

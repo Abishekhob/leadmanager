@@ -83,6 +83,13 @@ export default function StatusChangeModal({ show, lead, onClose, onSubmit, statu
     setFile(selectedFile);
   };
 
+  useEffect(() => {
+  if (show && lead?.category) {
+    setCategory(lead.category);
+  }
+}, [show, lead]);
+
+
   const shouldShowProposalOption = status === 'CONTACTED' || status === 'PROPOSAL_SENT' || status === 'FOLLOW_UP';
 
   return (

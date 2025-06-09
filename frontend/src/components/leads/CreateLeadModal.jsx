@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../axiosInstance';
 import { Modal, Button, Spinner } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
@@ -19,10 +19,8 @@ const CreateLeadModal = ({ show, onClose, initialData = null, onSuccess }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    axios.get('http://localhost:8080/api/users', {
-      headers: { Authorization: `Bearer ${token}` }
-    }).then(res => setUsers(res.data));
+     axios.get('/api/users/non-admin-users')
+    .then(res => setUsers(res.data));
   }, []);
 
   useEffect(() => {
@@ -43,8 +41,7 @@ const CreateLeadModal = ({ show, onClose, initialData = null, onSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const token = localStorage.getItem('token');
-
+  
     const dataToSend = {
       ...formData,
       assignedTo: formData.assignedTo === '' ? null : formData.assignedTo,
@@ -53,13 +50,9 @@ const CreateLeadModal = ({ show, onClose, initialData = null, onSuccess }) => {
 
     try {
       if (initialData) {
-        await axios.put(`http://localhost:8080/api/leads/${initialData.id}`, dataToSend, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        await axios.put(`/api/leads/${initialData.id}`, dataToSend);
       } else {
-        await axios.post('http://localhost:8080/api/leads/create', dataToSend, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        await axios.post('/api/leads/create', dataToSend);
       }      
 
       toast.success(`Lead ${initialData ? 'updated' : 'created'} successfully!`);
@@ -75,8 +68,7 @@ const CreateLeadModal = ({ show, onClose, initialData = null, onSuccess }) => {
 
   const handleFileUpload = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
-
+    
     if (!file) {
       toast.error("Please select a file.");
       return;
@@ -87,10 +79,9 @@ const CreateLeadModal = ({ show, onClose, initialData = null, onSuccess }) => {
     fileData.append('file', file);
 
     try {
-      await axios.post('http://localhost:8080/api/leads/upload', fileData, {
+      await axios.post('/api/leads/upload', fileData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`
+          'Content-Type': 'multipart/form-data'
         }
       });
       toast.success('File uploaded and Leads created!');
@@ -147,19 +138,18 @@ const CreateLeadModal = ({ show, onClose, initialData = null, onSuccess }) => {
 
         {/* Hide file upload when editing */}
         {!initialData?.id && (
-  <>
-    <hr className="my-4" />
-    <p className="text-center text-muted mb-2">OR Upload CSV/Excel</p>
+          <>
+            <hr className="my-4" />
+            <p className="text-center text-muted mb-2">OR Upload CSV/Excel</p>
 
-    <form onSubmit={handleFileUpload}>
-      <input type="file" className="form-control mb-2" onChange={(e) => setFile(e.target.files[0])} />
-      <Button type="submit" variant="secondary" className="w-100" disabled={loading}>
-        {loading ? 'Uploading...' : 'Upload File'}
-      </Button>
-    </form>
-  </>
-)}
-
+            <form onSubmit={handleFileUpload}>
+              <input type="file" className="form-control mb-2" onChange={(e) => setFile(e.target.files[0])} />
+              <Button type="submit" variant="secondary" className="w-100" disabled={loading}>
+                {loading ? 'Uploading...' : 'Upload File'}
+              </Button>
+            </form>
+          </>
+        )}
       </Modal.Body>
     </Modal>
   );

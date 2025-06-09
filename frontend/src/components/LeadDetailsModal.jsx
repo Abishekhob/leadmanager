@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
-import axios from 'axios';
+import axios from '../axiosInstance';
 import CreateLeadModal from './leads/CreateLeadModal';
 import { toast } from 'react-toastify';
 
@@ -13,6 +13,11 @@ export default function LeadDetailsModal({ show, lead, onHide, onLeadUpdated }) 
   const [users, setUsers] = useState([]);
   const [category, setCategory] = useState(lead?.category || '');
 
+  useEffect(() => {
+  if (lead?.category) {
+    setCategory(lead.category);
+  }
+}, [lead]);
 
   useEffect(() => {
     
@@ -20,10 +25,7 @@ export default function LeadDetailsModal({ show, lead, onHide, onLeadUpdated }) 
       if (lead?.id) {
 
         try {
-          const token = localStorage.getItem('token');
-          const res = await axios.get(`http://localhost:8080/api/lead-activities/lead/${lead.id}`, {
-            headers: { Authorization: `Bearer ${token}` }
-          });
+          const res = await axios.get(`/api/lead-activities/lead/${lead.id}`);
           setActivities(res.data);
         } catch (err) {
           console.error('Failed to fetch activities:', err);
@@ -33,10 +35,8 @@ export default function LeadDetailsModal({ show, lead, onHide, onLeadUpdated }) 
 
     const fetchUsers = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:8080/api/users', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        
+        const res = await axios.get('/api/users');
         setUsers(res.data);
       } catch (err) {
         console.error('Failed to fetch users:', err);
@@ -50,10 +50,8 @@ export default function LeadDetailsModal({ show, lead, onHide, onLeadUpdated }) 
   const handleAssign = async () => {
     if (!assignUserId) return;
     try {
-      const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:8080/api/leads/${lead.id}/assign?userId=${assignUserId}`, null, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+     
+      await axios.put(`/api/leads/${lead.id}/assign?userId=${assignUserId}`, null);
       toast.success('Lead assigned!');
       setAssignUserId('');
       onHide(); // Refresh modal or reload leads
@@ -75,13 +73,8 @@ const handleDeleteConfirm = (id) => {
 
 const deleteLead = async (id) => {
   try {
-    const token = localStorage.getItem("token"); // adjust based on how you're storing the token
-
-    await axios.delete(`http://localhost:8080/api/leads/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+ 
+    await axios.delete(`/api/leads/${id}`);
 
     toast.success("Lead deleted successfully");
     setShowConfirm(false);
@@ -114,10 +107,8 @@ const handleUpdateCategory = async () => {
   if (!category) return;
 
   try {
-    const token = localStorage.getItem('token');
-    await axios.put(`http://localhost:8080/api/leads/${lead.id}/update-category?category=${category}`, null, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    
+    await axios.put(`/api/leads/${lead.id}/update-category?category=${category}`, null);
     toast.success('Lead category updated!');
     onLeadUpdated(); // Optionally refresh the lead list or any other UI changes
   } catch (err) {
@@ -174,14 +165,15 @@ const handleUpdateCategory = async () => {
             <Form.Group controlId="category">
               <Form.Label>Category</Form.Label>
               <Form.Select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
               >
-                <option value="">-- Select Category --</option>
-                <option value="HOT">Hot</option>
-                <option value="WARM">Warm</option>
-                <option value="COLD">Cold</option>
+                  <option value="" disabled>-- Select Category --</option>
+                  <option value="HOT">Hot</option>
+                  <option value="WARM">Warm</option>
+                  <option value="COLD">Cold</option>
               </Form.Select>
+
             </Form.Group>
             <Button variant="primary" onClick={handleUpdateCategory}>
               Update Category

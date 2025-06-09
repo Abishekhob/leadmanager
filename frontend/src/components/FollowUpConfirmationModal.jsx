@@ -32,11 +32,11 @@ export default function FollowUpConfirmationModal({ show, lead, onClose, onSubmi
           <Form.Group className="mb-3">
             <Form.Label>How did the follow-up go?</Form.Label>
             <Form.Control
-  as="textarea"
-  value={summary}
-  onChange={(e) => setSummary(e.target.value)}
-  placeholder="Add follow-up details"
-/>
+              as="textarea"
+              value={summary}
+              onChange={(e) => setSummary(e.target.value)}
+              placeholder="Add follow-up details"
+            />
           </Form.Group>
 
           <Form.Check

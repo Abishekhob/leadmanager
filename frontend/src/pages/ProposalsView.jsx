@@ -23,7 +23,11 @@ const ProposalsView = ({
             sentProposals.map((p) => (
               <div key={p.id} className="card mb-4 shadow border">
                 <div className="card-body">
-                  <p><strong>Sent to:</strong> {p.assignedTo?.name || 'N/A'}</p>
+                 
+
+                  <p><strong>Sent to:</strong> {p.assignedToName || 'N/A'}</p>
+
+                   <p><strong>Lead name:</strong> {p.leadName || 'N/A'}</p>
 
                   {p.notes && (
                     <p className="text-muted">📝 {p.notes}</p>
@@ -100,6 +104,8 @@ const ProposalsView = ({
                   <small className="text-muted">{new Date(p.createdAt).toLocaleString()}</small>
                 </p>
 
+                 <p><strong>Lead name:</strong> {p.leadName || 'N/A'}</p>
+\begin{itemize}   
                 {p.notes && <p className="text-muted">📝 {p.notes}</p>}
 
                 {p.referenceFilePath && (

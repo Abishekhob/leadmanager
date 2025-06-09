@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from '../axiosInstance'; // Assuming you set this up
 import AdminNavbar from '../components/AdminNavbar';
+import AdminResetPassword from '../components/AdminResetPassword';
 
 const roles = ['ADMIN', 'USER', 'PROPOSAL_CREATOR'];// or get it from context or props
 
@@ -16,7 +17,7 @@ export default function ManageUsers() {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get('/api/users');
+      const res = await axios.get('/api/users/non-admin-users');
       if (Array.isArray(res.data)) {
         setUsers(res.data);
         setEditedRoles({});
@@ -137,6 +138,15 @@ const reactivateUser = async (id) => {
           </div>
         </form>
 
+        <div className="my-3">
+  <button
+    className="btn btn-outline-secondary"
+    data-bs-toggle="modal"
+    data-bs-target="#resetPasswordModal"
+  >
+    Reset User Password
+  </button>
+</div>
         <h3>Manage Users</h3>
         <table className="table table-bordered mt-3">
           <thead>
@@ -204,8 +214,34 @@ const reactivateUser = async (id) => {
               );
             })}
           </tbody>
-        </table>
+        </table>    
       </div>
+      {/* Modal for resetting user password */}
+      <div
+        className="modal fade"
+        id="resetPasswordModal"
+        tabIndex="-1"
+        aria-labelledby="resetPasswordModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="resetPasswordModalLabel">Reset User Password</h5>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="modal-body">
+              <AdminResetPassword />
+            </div>
+          </div>
+        </div>
+      </div>
+
     </>
   );
 }

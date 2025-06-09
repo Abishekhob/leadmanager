@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom'; // ✅ Added Link
 import { toast } from 'react-toastify';
 import axiosInstance from '../axiosInstance';
 
@@ -24,12 +24,10 @@ export default function LoginForm() {
 
       const { token, role, userId } = response.data;
 
-      // Store token and role in localStorage
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
       localStorage.setItem("userId", userId);
 
-      // Navigate based on role
       if (role === "ADMIN") {
         navigate('/admin-dashboard');
       } else if (role === 'USER' || role === 'PROPOSAL_CREATOR') {
@@ -38,7 +36,6 @@ export default function LoginForm() {
         console.warn("⚠️ Unknown role, staying on login.");
       }
 
-      
     } catch (err) {
       const errorMessage = err.response?.data?.message || 'Invalid email or password';
       toast.error(errorMessage);
@@ -69,6 +66,11 @@ export default function LoginForm() {
         />
         <button className="btn btn-primary w-100" type="submit">Login</button>
       </form>
+
+      {/* ✅ Added Sign up link */}
+      <div className="mt-3 text-center">
+        Need to sign up? <Link to="/register">Register</Link>
+      </div>
     </div>
   );
 }

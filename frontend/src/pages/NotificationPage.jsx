@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import AdminNavbar from '../components/AdminNavbar';
 import Notifications from '../components/Notifications';
-import axios from 'axios';
+import axios from '../axiosInstance';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -11,11 +11,9 @@ export default function NotificationsPage() {
 
   useEffect(() => {
     const fetchLeads = async () => {
-      const token = localStorage.getItem('token');
+    
       try {
-        const response = await axios.get('http://localhost:8080/api/leads', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await axios.get('/api/leads');
         setLeads(response.data);
       } catch (error) {
         console.error('Failed to fetch leads:', error);

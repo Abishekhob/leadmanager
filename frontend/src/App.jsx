@@ -13,12 +13,19 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
+
 
 
 
 function App() {
   return (
+    <>
+     {/* This triggers notification permission and token request */}
     
+
     <Router>
         <ToastContainer position="top-right" autoClose={3000} />
       <Routes>
@@ -61,6 +68,7 @@ function App() {
 
       </Routes>
     </Router>
+    </>
   );
 }
 

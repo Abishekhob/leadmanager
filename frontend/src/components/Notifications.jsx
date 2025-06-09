@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '../axiosInstance';
 import { useNavigate } from 'react-router-dom';
 import LeadDetailsModal from './LeadDetailsModal';
 
@@ -23,9 +23,7 @@ const Notifications = ({ leads = [] }) => {
       }
 
       try {
-        const res = await axios.get(`http://localhost:8080/api/notifications/user/${userId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await axios.get(`/api/notifications/user/${userId}`);
         setNotifications(res.data);
       } catch (err) {
         const status = err?.response?.status;
@@ -44,9 +42,8 @@ const Notifications = ({ leads = [] }) => {
     try {
       if (!isRead) {
         await axios.put(
-          `http://localhost:8080/api/notifications/${id}/read`,
-          {},
-          { headers: { Authorization: `Bearer ${token}` } }
+          `/api/notifications/${id}/read`,
+          {}
         );
         setNotifications((prev) =>
           prev.map((n) => (n.id === id ? { ...n, read: true } : n))
@@ -64,6 +61,26 @@ const Notifications = ({ leads = [] }) => {
     } catch (err) {
       console.error('Notification click error:', err);
       setError('Failed to open lead details.');
+    }
+  };
+
+  // New function to clear all notifications
+  const handleClearAll = async () => {
+    // Check if there are unread notifications
+    const hasUnread = notifications.some((n) => !n.read);
+
+    if (hasUnread) {
+      const confirmed = window.confirm(
+        'Are you sure? You have some unread notifications.'
+      );
+      if (!confirmed) return; // Cancel deletion if user says no
+    }
+
+    try {
+      await axios.delete(`/api/notifications/user/${userId}/clear`);
+      setNotifications([]); // Clear notifications from UI after successful deletion
+    } catch (err) {
+      setError('Failed to clear notifications.');
     }
   };
 
@@ -94,6 +111,24 @@ const Notifications = ({ leads = [] }) => {
       {loading && <p>Loading...</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {!loading && !error && notifications.length === 0 && <p>No notifications yet</p>}
+
+      {/* Clear All button */}
+      {!loading && !error && notifications.length > 0 && (
+        <button
+          onClick={handleClearAll}
+          style={{
+            marginBottom: '10px',
+            padding: '8px 16px',
+            backgroundColor: '#ff4d4f',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+          }}
+        >
+          Clear All
+        </button>
+      )}
 
       {!loading && !error && notifications.length > 0 && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import Column from '../components/Column';
 import LeadDetailsModal from '../components/LeadDetailsModal';
 import CreateLeadModal from '../components/leads/CreateLeadModal';
@@ -9,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import AdminNavbar from '../components/AdminNavbar';
 import { isTokenExpired } from '../utils/authUtils';
 import SessionExpired from '../components/SessionExpired';
+import axiosInstance from '../axiosInstance';
 
 const statusList = ['NEW', 'CONTACTED', 'FOLLOW_UP', 'PROPOSAL_SENT', 'CLOSED', 'UNASSIGNED'];
 
@@ -34,16 +34,12 @@ export default function AdminDashboard() {
   };
 
   const assignSelectedLeadsRandomly = async () => {
-    const token = localStorage.getItem('token');
+   
     setIsAssigning(true);
 
     try {
-      await axios.put('http://localhost:8080/api/leads/assign-random', selectedLeads, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axiosInstance.put('/api/leads/assign-random', selectedLeads);
+        
 
       toast.success('Selected leads assigned randomly!');
       setSelectedLeads([]);
@@ -57,14 +53,9 @@ export default function AdminDashboard() {
   };
 
   const fetchLeads = () => {
-    const token = localStorage.getItem('token');
-
-    axios
-      .get('http://localhost:8080/api/leads', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+   
+    axiosInstance
+      .get('/api/leads')
       .then((response) => {
         const grouped = {};
         statusList.forEach((status) => (grouped[status] = []));
@@ -136,12 +127,6 @@ export default function AdminDashboard() {
     return <SessionExpired />;
   }
 
-  const hasMoreLeads = () => {
-    return statusList.some((status) => {
-      const totalLeads = filterLeads(leadsByStatus[status] || []).length;
-      return totalLeads > currentPage * leadsPerColumn;
-    });
-  };
 
   const totalPages = Math.max(
     ...statusList.map(

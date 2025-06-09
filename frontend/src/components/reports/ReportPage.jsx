@@ -28,7 +28,7 @@ const ReportPage = () => {
     const fetchInitialData = async () => {
       try {
         const [usersRes, leadsRes, filtersRes] = await Promise.all([
-          axiosInstance.get('/api/users'),
+          axiosInstance.get('/api/users/non-admin-users'),
           axiosInstance.get('/api/leads'),
           axiosInstance.get('/api/leads/filters'),
         ]);

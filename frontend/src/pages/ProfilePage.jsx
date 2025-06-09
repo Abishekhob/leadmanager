@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
+import axios from '../axiosInstance';
 import { FaPen } from 'react-icons/fa';
 import AdminNavbar from '../components/AdminNavbar';
 import { toast } from 'react-toastify';
@@ -18,17 +18,9 @@ const ProfilePage = () => {
 
   const fileInputRef = useRef(null);
 
-  const token = localStorage.getItem('token');
-
-  const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8080/api',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
 
   useEffect(() => {
-    axiosInstance.get('/profile')
+    axios.get('/api/profile')
       .then((res) => {
         const { role, ...userData } = res.data;
         setUser(userData);
@@ -58,7 +50,7 @@ const ProfilePage = () => {
     };
 
     try {
-        const response = await axiosInstance.put('/profile', updatedData);
+        const response = await axios.put('/api//profile', updatedData);
         setUser((prevUser) => ({ ...prevUser, ...updatedData }));
         toast.success('Profile updated!');
         setIsEditing(false);
@@ -83,7 +75,7 @@ const ProfilePage = () => {
   data.append('file', selectedFile);
 
   try {
-    const response = await axiosInstance.post('/profile/upload-picture', data);
+    const response = await axios.post('/api/profile/upload-picture', data);
     const newProfilePicture = response.data.profilePicture;
 
     // Directly update the profile picture URL for instant update without refresh

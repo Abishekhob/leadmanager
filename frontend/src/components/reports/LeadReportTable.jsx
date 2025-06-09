@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../../axiosInstance";
 import jsPDF from "jspdf";
+import * as XLSX from "xlsx";
 import autoTable from "jspdf-autotable"; 
 import {
   BarChart,
@@ -39,7 +40,7 @@ const LeadReportTable = ({ incomingLeads = [], incomingUsers = [], incomingFilte
       const fetchInitialData = async () => {
         try {
           const [usersRes, leadsRes, filtersRes] = await Promise.all([
-            axiosInstance.get("/api/users"),
+            axiosInstance.get("/api/users/non-admin-users"),
             axiosInstance.get("/api/leads"),
             axiosInstance.get("/api/leads/filters"),
           ]);
@@ -170,6 +171,73 @@ const LeadReportTable = ({ incomingLeads = [], incomingUsers = [], incomingFilte
     }))
     .filter((d) => d.count > 0);
 
+const downloadExcel = () => {
+  const columns = [
+    "Lead Name",
+    "Email",
+    "Phone",
+    "Source",
+    "Category",
+    "Status",
+    "Outcome",
+    "Assigned To",
+    "Created At",
+    "Deal Value",
+    "Completed At",
+  ];
+
+  const data = filteredLeads.map((lead) => {
+    const user =
+      lead.assignedTo && typeof lead.assignedTo === "object"
+        ? users.find((u) => String(u.id) === String(lead.assignedTo.id))
+        : null;
+
+    return {
+      "Lead Name": lead.name,
+      "Email": lead.email,
+      "Phone": lead.phone,
+      "Source": lead.source || "—",
+      "Category": lead.category || "—",
+      "Status": lead.status || "—",
+      "Outcome": lead.outcome || "—",
+      "Assigned To": user ? user.name : "Unassigned",
+      "Created At": lead.createdAt?.slice(0, 10),
+      "Deal Value": lead.dealValue ?? "—",
+      "Completed At": lead.completedAt
+        ? new Date(lead.completedAt).toLocaleDateString()
+        : "Not Completed",
+    };
+  });
+
+  // Prepare filter summary
+  const activeFilters = Object.entries(filters)
+    .filter(([_, value]) => value !== "")
+    .map(([key, value]) => {
+      let label = key;
+      if (key === "userId") {
+        const user = users.find((u) => String(u.id) === String(value));
+        label = `User: ${user ? user.name : value}`;
+      } else {
+        label = `${key.charAt(0).toUpperCase() + key.slice(1)}: ${value}`;
+      }
+      return [label];
+    });
+
+  const worksheetData = [
+    ["Lead Report"], // Title
+    [], // Empty row
+    ...(activeFilters.length > 0 ? [["Applied Filters:"], ...activeFilters, []] : []),
+    columns, // Column headers
+    ...data.map((row) => columns.map((col) => row[col])), // Data rows
+  ];
+
+  const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Leads");
+
+  XLSX.writeFile(workbook, "lead-report.xlsx");
+};
+
   return (
     <div className="p-4">
       <h2 className="text-xl font-bold mb-4">Lead Report</h2>
@@ -206,6 +274,12 @@ const LeadReportTable = ({ incomingLeads = [], incomingUsers = [], incomingFilte
 
 </button>
 
+<button
+  onClick={downloadExcel}
+  className="btn btn-success mb-3 ml-3"
+>
+  <i className="fas fa-file-excel me-2"></i> Download Excel
+</button>
 
 
       {/* Chart */}

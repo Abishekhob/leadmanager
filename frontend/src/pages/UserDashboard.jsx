@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import axiosInstance from '../axiosInstance';
 import axios from 'axios';
 import Column from '../components/Column';
 import { DragDropContext } from '@hello-pangea/dnd';
@@ -11,11 +12,8 @@ import Notifications from '../components/Notifications';
 import ProposalsView from './ProposalsView';
 import { isTokenExpired } from '../utils/authUtils';
 import SessionExpired from '../components/SessionExpired';
-import ReminderNotifier from '../components/ReminderNotifier';
-
-
-
 import { toast } from 'react-toastify';
+import BootstrapPagination from '../components/BootstrapPagination';
 
 const statusList = ['NEW', 'CONTACTED', 'FOLLOW_UP', 'PROPOSAL_SENT', 'CLOSED'];
 
@@ -34,17 +32,19 @@ export default function UserDashboard() {
   const [receivedProposals, setReceivedProposals] = useState([]);
   const [showFollowUpModal, setShowFollowUpModal] = useState(false);
   const role = localStorage.getItem('role');
-
   const [isStatusModalForced, setIsStatusModalForced] = useState(false);
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const leadsPerPage = 5;
-
   const [searchQuery, setSearchQuery] = useState('');
-
   const [sessionExpired, setSessionExpired] = useState(false);
-
   const fixPath = (path) => path?.replace(/\\/g, '/');
+
+  const [userBadgeCount, setUserBadgeCount] = useState(0);
+  const [creatorBadgeCount, setCreatorBadgeCount] = useState(0);
+
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const isUser = role === 'USER';
+  const isCreator = role === 'PROPOSAL_CREATOR';
 
   const [view, setView] = useState(() => {
     return localStorage.getItem('currentView') || 'home';
@@ -83,55 +83,83 @@ export default function UserDashboard() {
     setShowModal(false);  // Optionally close the modal
   };
 
-  const fetchLeads = async (query = '') => {
-  const token = localStorage.getItem('token');
+  const fetchLeads = async () => {
+
   const userId = localStorage.getItem('userId');
 
   try {
-    const url = query
-      ? `http://localhost:8080/api/leads/user/${userId}?search=${query}`
-      : `http://localhost:8080/api/leads/user/${userId}`;
+    const url = `/api/leads/user/${userId}?search=${searchQuery}`;
+    const res = await axiosInstance.get(url);
 
-    const res = await axios.get(url, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const all = res.data;
+    setAllLeads(all);
 
-    const grouped = statusList.reduce((acc, status) => {
-      acc[status] = res.data.filter((lead) => lead.status === status);
+    const maxLeadsPerColumn = 6;
+
+    // Group leads by status
+    const groupedLeads = statusList.reduce((acc, status) => {
+      acc[status] = all.filter((lead) => lead.status === status);
       return acc;
     }, {});
-    setLeads(grouped);
-    setAllLeads(res.data);
-    setCurrentPage(1); // reset to first page on new fetch
+
+    // Calculate total pages based on the longest list
+    const pages = Math.max(
+      ...statusList.map((status) =>
+        Math.ceil(groupedLeads[status].length / maxLeadsPerColumn)
+      )
+    );
+    setTotalPages(pages);
+
+    // Slice the leads per status based on the current page
+    const slicedGrouped = {};
+    for (let status of statusList) {
+      const leadsOfStatus = groupedLeads[status];
+      const startIndex = currentPage * maxLeadsPerColumn;
+      const endIndex = startIndex + maxLeadsPerColumn;
+      slicedGrouped[status] = leadsOfStatus.slice(startIndex, endIndex);
+    }
+
+    setLeads(slicedGrouped);
+
   } catch (err) {
     console.error('Error fetching leads:', err);
   }
 };
 
-
   const fetchProposals = async () => {
-    const token = localStorage.getItem('token');
     try {
-      const [sentRes, receivedRes] = await Promise.all([
-        axios.get('http://localhost:8080/proposals/sent', {
-          headers: { Authorization: `Bearer ${token}` }
-        }),
-        axios.get('http://localhost:8080/proposals/received', {
-          headers: { Authorization: `Bearer ${token}` }
-        })
-      ]);
-      setSentProposals(sentRes.data);
-      setReceivedProposals(receivedRes.data);
-    } catch (err) {
-      console.error('Error fetching proposals', err);
-    }
-  };
+    const [sentRes, receivedRes] = await Promise.all([
+      axiosInstance.get('/proposals/sent'),
+      axiosInstance.get('/proposals/received')
+    ]);
+
+  const sent = sentRes.data;
+  const received = receivedRes.data;
+
+  setSentProposals(sent);
+  setReceivedProposals(received);
+
+    // ✅ Badge logic
+  const pendingProposalsForUser = sent.filter(
+    (p) => p.proposalFilePath && !p.completed
+  );
+  const pendingRequestsForCreator = received.filter(
+    (p) => !p.proposalFilePath
+  );
+
+    setUserBadgeCount(pendingProposalsForUser.length);
+    setCreatorBadgeCount(pendingRequestsForCreator.length);
+  } catch (err) {
+    console.error('Error fetching proposals', err);
+  }
+};
+
   
   const handleSearchChange = (e) => {
   const value = e.target.value;
   setSearchQuery(value);
   fetchLeads(value); // Fetch leads based on the query
-};
+  };
 
   useEffect(() => {
     fetchProposals();
@@ -139,8 +167,11 @@ export default function UserDashboard() {
 
 
   useEffect(() => {
-    if (view === 'home' || view === 'notifications') fetchLeads();
-  }, [view]);
+    if (view === 'home' || view === 'notifications') {
+    fetchLeads();
+    }
+  }, [view, currentPage, searchQuery]);
+
 
   const uploadProposal = async (e, proposalId) => {
     e.preventDefault();
@@ -163,11 +194,8 @@ export default function UserDashboard() {
   };
 
   const markComplete = async (proposalId) => {
-    const token = localStorage.getItem('token');
-    try {
-      await axios.post(`http://localhost:8080/proposals/complete/${proposalId}`, {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+     try {
+      await axiosInstance.post(`/proposals/complete/${proposalId}`, {});
       toast.success("Marked as complete");
       fetchProposals();
     } catch (err) {
@@ -197,22 +225,19 @@ export default function UserDashboard() {
     setSelectedLead(movedLead);
     setSelectedStatus(destination.droppableId);
     setShowStatusModal(true);
-};
+  };
 
-const handleFollowUpSubmit = (formData) => {
-  const token = localStorage.getItem('token');
+  const handleFollowUpSubmit = (formData) => {
   const userId = localStorage.getItem('userId');
 
   const hasSummary = formData.summary && formData.summary.trim() !== '';
   const hasFollowUpDate = formData.nextFollowUpDate && formData.nextFollowUpDate.trim() !== '';
 
   if (hasSummary || hasFollowUpDate) {
-    axios.put(`http://localhost:8080/api/leads/${formData.leadId}/update-followup-date`, {
+    axiosInstance.put(`/api/leads/${formData.leadId}/update-followup-date`, {
       followUpDate: hasFollowUpDate ? formData.nextFollowUpDate : null,
       summary: formData.summary,
       userId: userId
-    }, {
-      headers: { Authorization: `Bearer ${token}` }
     }).then(() => {
       toast.success('Follow-up updated successfully!');
       fetchLeads();
@@ -240,8 +265,7 @@ const handleFollowUpSubmit = (formData) => {
 };
 
   const handleStatusUpdate = async (formData) => {
-    const token = localStorage.getItem('token');
-  
+      
     try {
       if (!selectedLead) throw new Error("No lead selected");
   
@@ -268,14 +292,12 @@ const handleFollowUpSubmit = (formData) => {
         leadStatusFormData.append('proposalCreatorId', proposalCreatorId);
         
       }
-  
-      
+              
       // Update lead status
-      await axios.put(`http://localhost:8080/api/leads/${leadId}/status`, leadStatusFormData, {
+      await axiosInstance.put(`/api/leads/${leadId}/status`, leadStatusFormData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`,
-        },
+          'Content-Type': 'multipart/form-data'
+          },
       });
   
       // Optional: Send proposal request
@@ -285,10 +307,9 @@ const handleFollowUpSubmit = (formData) => {
         proposalFormData.append('notes', formData.get('note'));
         proposalFormData.append('proposalFile', formData.get('file'));
   
-        await axios.post(`http://localhost:8080/proposals/request/${leadId}`, proposalFormData, {
+        await axiosInstance.post(`/proposals/request/${leadId}`, proposalFormData, {
           headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data'           
           },
         });
       }
@@ -302,6 +323,19 @@ const handleFollowUpSubmit = (formData) => {
     }
    
   };
+
+   useEffect(() => {
+     if (view === 'home' || view === 'notifications') {
+    fetchLeads(searchQuery, currentPage); // Initial fetch with pagination
+
+    const interval = setInterval(() => {
+      fetchLeads(searchQuery, currentPage); // Fetch leads every 10 seconds with pagination
+    }, 10000);
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }
+}, [view, searchQuery, currentPage]); // 👈 Added `currentPage` dependency
+
    useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -309,41 +343,50 @@ const handleFollowUpSubmit = (formData) => {
       setSessionExpired(true);
     }
 
-    // Optional: auto-logout on expiry after token duration
-    const interval = setInterval(() => {
-      if (isTokenExpired(token)) {
-        setSessionExpired(true);
-        clearInterval(interval);
-      }
-    }, 60000); // check every 10s
+  const interval = setInterval(() => {
+    if (isTokenExpired(token)) {
+      setSessionExpired(true);
+      clearInterval(interval);
+    }
+  }, 60000); // check every 60 seconds
 
-    return () => clearInterval(interval);
-  }, []);
+  return () => clearInterval(interval);
+}, []);
 
-  if (sessionExpired) {
-    return <SessionExpired />;
-  }
+if (sessionExpired) {
+  return <SessionExpired />;
+}
   
 return (
   <div className="container-fluid">
-    <Navbar onNavigate={handleNavigate} />
-
-     <ReminderNotifier userId={userId} />
+  
+  <Navbar
+  onNavigate={handleNavigate}
+  currentView={view}
+  userRole={role} // ✅ Use role from localStorage
+  userBadgeCount={userBadgeCount}
+  creatorBadgeCount={creatorBadgeCount}
+  />
 
     {view === 'home' && (
       <>
-      <div className="mb-3">
-      <input
-        type="text"
-        className="form-control"
-        placeholder="Search leads..."
-        value={searchQuery}
-        onChange={handleSearchChange}
-      />
-    </div>
+        {/* Search Bar */}
+        <div className="mb-3">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search leads..."
+            value={searchQuery}
+            onChange={handleSearchChange}
+          />
+        </div>
 
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <div className="d-flex overflow-auto gap-4">
+      {/* Drag and Drop Columns */}
+      <DragDropContext onDragEnd={handleDragEnd}>
+          <div
+            className="d-flex overflow-auto gap-4 align-items-stretch"
+            style={{ minHeight: '500px' }} // or any height that fits your layout
+          >
             {statusList.map((status) => (
               <Column
                 key={status}
@@ -353,8 +396,17 @@ return (
               />
             ))}
           </div>
-        </DragDropContext>
+      </DragDropContext>
 
+      <div className="d-flex justify-content-center mt-3">
+        <BootstrapPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage} // Assuming you use `setCurrentPage` to update
+        />
+      </div>
+
+        {/* Lead Detail Modal */}
         <LeadDetailsModal
           show={showModal}
           lead={selectedLead}
@@ -362,19 +414,19 @@ return (
           onLeadUpdated={handleLeadUpdated}
         />
 
+        {/* Status Change Modal */}
         <StatusChangeModal
           show={showStatusModal}
           lead={selectedLead}
           onClose={handleCloseStatusModal}
           onSubmit={handleStatusUpdate}
           status={selectedStatus}
-          forceModal={isStatusModalForced} // 👈 pass it here
+          forceModal={isStatusModalForced}
         />
-
       </>
     )}
 
-    <ProposalsView
+     <ProposalsView
       view={view}
       role={role}
       sentProposals={sentProposals}
@@ -384,6 +436,7 @@ return (
       fixPath={fixPath}
     />
 
+    {/* Follow-up Modal (Global) */}
     <FollowUpConfirmationModal
       show={showFollowUpModal}
       lead={selectedLead}
@@ -391,7 +444,10 @@ return (
       onSubmit={handleFollowUpSubmit}
     />
 
+    {/* Profile Page */}
     {view === 'profile' && <ProfilePage />}
+
+    {/* Notifications Page */}
     {view === 'notifications' && <Notifications leads={allLeads} />}
   </div>
 );
