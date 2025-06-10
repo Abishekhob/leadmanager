@@ -15,9 +15,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-
-
-
+import HomePage from './pages/HomePage';
 
 
 function App() {
@@ -29,7 +27,7 @@ function App() {
     <Router>
         <ToastContainer position="top-right" autoClose={3000} />
       <Routes>
-        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<RegisterForm />} />
         
