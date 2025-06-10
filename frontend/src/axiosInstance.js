@@ -2,7 +2,7 @@
   import axios from 'axios';
 
   const instance = axios.create({
-  baseURL: "https://leadmanager-wfaq.onrender.com",
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
