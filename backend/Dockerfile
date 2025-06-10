@@ -1,17 +1,9 @@
-# Use lightweight JDK base image
-FROM eclipse-temurin:17-jdk-alpine
-
-# Set working directory inside container
+FROM maven:3.9.3-eclipse-temurin-17-alpine AS build
 WORKDIR /app
-
-# Copy backend project files
 COPY . .
+RUN mvn clean package -DskipTests
 
-# Make Maven wrapper executable
-RUN chmod +x mvnw
-
-# Build the application (skip tests)
-RUN ./mvnw clean package -DskipTests
-
-# Run the generated jar file
-CMD ["java", "-jar", "target/*.jar"]
+FROM eclipse-temurin:17-jdk-alpine
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
+CMD ["java", "-jar", "app.jar"]
