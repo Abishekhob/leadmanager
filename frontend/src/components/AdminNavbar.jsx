@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Navbar, Nav, Container, Modal, Button } from 'react-bootstrap';
+import axios from '../axiosInstance';
 
 
 import { NavLink } from 'react-router-dom';
@@ -22,22 +23,23 @@ export default function AdminNavbar() {
   const token = localStorage.getItem('token');
 
   useEffect(() => {
-    const fetchUnreadCount = async () => {
-      try {
-        const response = await fetch(`http://localhost:8080/api/notifications/unread-count?userId=${userId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const count = await response.json();
+ const fetchUnreadCount = async () => {
+  try {
+    const response = await axios.get(`/api/notifications/unread-count`, {
+      params: { userId }
+    });
 
-        // Only trigger blinking when the unread count *increases*
-        setIsNewNotification((prev) => count > unreadCount);
-        setUnreadCount(count);
-      } catch (error) {
-        console.error("Error fetching unread notifications count:", error);
-      }
-    };
+    const count = response.data;
 
-    fetchUnreadCount();
+    // Only trigger blinking when the unread count *increases*
+    setIsNewNotification((prev) => count > unreadCount);
+    setUnreadCount(count);
+  } catch (error) {
+    console.error("Error fetching unread notifications count:", error);
+  }
+};
+
+fetchUnreadCount();
 
     const interval = setInterval(fetchUnreadCount, 30000);
     return () => clearInterval(interval);
