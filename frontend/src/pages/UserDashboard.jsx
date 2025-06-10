@@ -180,7 +180,7 @@ export default function UserDashboard() {
     const token = localStorage.getItem('token');
 
     try {
-      await axios.post(`http://localhost:8080/proposals/upload/${proposalId}`, formData, {
+      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/proposals/upload/${proposalId}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data"
