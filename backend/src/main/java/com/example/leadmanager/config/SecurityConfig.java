@@ -62,7 +62,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("https://leadmanager-p9dz2286y-abishekhobs-projects.vercel.app"));
+        config.setAllowedOrigins(List.of("https://leadmanager-hrabx4mhl-abishekhobs-projects.vercel.app"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT","PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         config.setAllowCredentials(true);
