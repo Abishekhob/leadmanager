@@ -2,7 +2,11 @@
   import axios from 'axios';
 
   const instance = axios.create({
+<<<<<<< HEAD
     baseURL: "https://leadmanager-wfaq.onrender.com", // base URL for your Spring Boot backend
+=======
+     baseURL: process.env.REACT_APP_API_BASE_URL,  // base URL for your Spring Boot backend
+>>>>>>> 12c575d (Updated axios instance 2)
     headers: {
       'Content-Type': 'application/json',
     },
