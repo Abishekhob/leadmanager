@@ -41,13 +41,13 @@ public class SecurityConfig {
                                 "/uploads/**",
                                 "/ws/**",              // <-- you already have this, but your endpoint is /ws-reminder, so add it explicitly below
                                 "/ws-reminder/**",
-                                "api/users/auth/validate-invite",
-                                "api/users/auth/set-password").permitAll()
+                                "/api/users/auth/validate-invite",
+                                "/api/users/auth/set-password").permitAll()
                         .requestMatchers("/api/leads/**").authenticated()// allow both login + register
                         .requestMatchers("/api/notifications/**").authenticated()
                         .requestMatchers("/api/users/**").authenticated()
                         .requestMatchers("/api/reports/**").authenticated()
-                        .requestMatchers("proposals/**").authenticated()
+                        .requestMatchers("/proposals/**").authenticated()
                         .requestMatchers("/api/admin/**").authenticated()
                         .requestMatchers("/api/profile").authenticated()
                         .requestMatchers("/api/reminders").authenticated()
