@@ -23,20 +23,20 @@ export default function AdminNavbar() {
 
   useEffect(() => {
     const fetchUnreadCount = async () => {
-  try {
-    const response = await axios.get(`/api/notifications/unread-count`, {
-      params: { userId }
-    });
-    const count = response.data;
-       // Only trigger blinking when the unread count *increases*Add commentMore actions
-    setIsNewNotification((prev) => count > unreadCount);
-    setUnreadCount(count);
-  } catch (error) {
-    console.error("Error fetching unread notifications count:", error);
-  }
-};
+      try {
+        const response = await axios.get(`/api/notifications/unread-count`, {
+          params: { userId }
+        });
+        const count = response.data;
+          // Only trigger blinking when the unread count *increases*Add commentMore actions
+        setIsNewNotification((prev) => count > unreadCount);
+        setUnreadCount(count);
+      } catch (error) {
+        console.error("Error fetching unread notifications count:", error);
+      }
+    };
 
-fetchUnreadCount();
+    fetchUnreadCount();
 
     const interval = setInterval(fetchUnreadCount, 30000);
     return () => clearInterval(interval);
