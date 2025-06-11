@@ -50,7 +50,7 @@ const ProfilePage = () => {
     };
 
     try {
-        const response = await axios.put('/api//profile', updatedData);
+        const response = await axios.put('/api/profile', updatedData);
         setUser((prevUser) => ({ ...prevUser, ...updatedData }));
         toast.success('Profile updated!');
         setIsEditing(false);
@@ -118,7 +118,7 @@ const ProfilePage = () => {
                 previewImage
                   ? previewImage
                   : user.profilePicture
-                    ? `http://localhost:8080/uploads/profile_pictures/${user.profilePicture}`
+                    ? `${import.meta.env.VITE_API_BASE_URL}/uploads/profile_pictures/${user.profilePicture}`
                     : '/default-profile.png'
               }
               alt="Profile"
@@ -197,7 +197,16 @@ const styles = {
   header: { textAlign: 'center', marginBottom: '20px' },
   profilePicWrapper: { position: 'relative', textAlign: 'center' },
   profileImage: { width: '150px', height: '150px', borderRadius: '50%', objectFit: 'cover' },
-  penIcon: { position: 'absolute', top: '5px', right: '5px', cursor: 'pointer' },
+  penIcon: {
+  position: 'absolute',
+  bottom: '10px',
+  right: '10px',
+  backgroundColor: '#fff',
+  padding: '5px',
+  borderRadius: '50%',
+  boxShadow: '0 0 4px rgba(0,0,0,0.2)',
+  cursor: 'pointer',
+},
   saveButton: {
     marginTop: '10px',
     padding: '6px 12px',
