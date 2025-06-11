@@ -49,7 +49,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/reports/**").authenticated()
                         .requestMatchers("/proposals/**").authenticated()
                         .requestMatchers("/api/admin/**").authenticated()
-                        .requestMatchers("/api/profile").authenticated()
+                        .requestMatchers("/api/profile/**").authenticated()
                         .requestMatchers("/api/reminders").authenticated()
                         .requestMatchers("/api/lead-activities/**").authenticated()
                         .anyRequest().authenticated()
