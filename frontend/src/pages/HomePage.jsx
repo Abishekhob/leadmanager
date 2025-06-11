@@ -1,47 +1,82 @@
 // pages/HomePage.jsx
 import { Link } from 'react-router-dom';
- // You can create this CSS for additional styles
 
 function HomePage() {
   return (
     <div className="container-fluid p-0">
       {/* Hero Banner */}
-      <div className="jumbotron text-center bg-dark text-white d-flex align-items-center justify-content-center" style={{ height: '80vh', backgroundImage: 'url(/banner.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        <div className="overlay text-white p-4 rounded" style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}>
+      <div
+        className="jumbotron text-center bg-dark text-white d-flex align-items-center justify-content-center"
+        style={{
+          height: '80vh',
+          backgroundImage: 'url(/banner.jpg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div
+          className="overlay text-white p-4 rounded"
+          style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}
+        >
           <h1 className="display-4">Welcome to LeadManager</h1>
-          <p className="lead">Your smart lead management and tracking system</p>
+          <p className="lead">Smart Lead & Task Management for Sales Teams</p>
           <div className="mt-4">
-            <Link to="/login" className="btn btn-primary me-3">Login</Link>
-            <Link to="/register" className="btn btn-outline-light">Register</Link>
+            <Link to="/login" className="btn btn-primary me-3">
+              Login
+            </Link>
+            <Link to="/register" className="btn btn-outline-light">
+              Register
+            </Link>
           </div>
         </div>
       </div>
 
-      {/* Features */}
+      {/* Features Section */}
       <div className="container py-5">
-        <h2 className="text-center mb-4">Features</h2>
+        <h2 className="text-center mb-4">Key Features</h2>
         <div className="row text-center">
           <div className="col-md-4 mb-4">
-            <i className="fas fa-tasks fa-3x text-primary mb-3"></i>
-            <h5>Lead Tracking</h5>
-            <p>Track leads from capture to conversion.</p>
+            <i className="fas fa-user-cog fa-3x text-primary mb-3"></i>
+            <h5>Role-Based Access</h5>
+            <p>Admins, Proposal Creators, and Sales Users with task-specific privileges.</p>
           </div>
           <div className="col-md-4 mb-4">
-            <i className="fas fa-chart-line fa-3x text-success mb-3"></i>
-            <h5>Performance Reports</h5>
-            <p>Visualize user and team performance.</p>
+            <i className="fas fa-random fa-3x text-success mb-3"></i>
+            <h5>Random Lead Assignment</h5>
+            <p>Distribute leads evenly among available salespeople in one click.</p>
           </div>
           <div className="col-md-4 mb-4">
-            <i className="fas fa-bell fa-3x text-warning mb-3"></i>
-            <h5>Notifications</h5>
-            <p>Get alerts on new tasks, deadlines & approvals.</p>
+            <i className="fas fa-clock fa-3x text-warning mb-3"></i>
+            <h5>Follow-up Reminders</h5>
+            <p>Receive timely notifications 2 hours before scheduled follow-ups.</p>
+          </div>
+
+          <div className="col-md-4 mb-4">
+            <i className="fas fa-file-upload fa-3x text-info mb-3"></i>
+            <h5>Proposal Requests</h5>
+            <p>Sales users can request & track proposals; creators submit them for review.</p>
+          </div>
+          <div className="col-md-4 mb-4">
+            <i className="fas fa-filter fa-3x text-danger mb-3"></i>
+            <h5>Filterable Reports</h5>
+            <p>View and download lead performance reports in Excel & PDF formats.</p>
+          </div>
+          <div className="col-md-4 mb-4">
+            <i className="fas fa-layer-group fa-3x text-secondary mb-3"></i>
+            <h5>Stage-Based Workflow</h5>
+            <p>Move leads from New → Contacted → Follow-up → Proposal Sent → Closed.</p>
           </div>
         </div>
 
-        {/* Screenshot section (optional) */}
+        {/* Screenshot Preview */}
         <div className="text-center mt-5">
           <h4>See It in Action</h4>
-          <img src="/screenshot.png" alt="App Screenshot" className="img-fluid rounded shadow mt-3" style={{ maxWidth: '80%' }} />
+          <img
+            src="/screenshot.png"
+            alt="App Screenshot"
+            className="img-fluid rounded shadow mt-3"
+            style={{ maxWidth: '80%' }}
+          />
         </div>
       </div>
     </div>
@@ -49,3 +84,4 @@ function HomePage() {
 }
 
 export default HomePage;
+
