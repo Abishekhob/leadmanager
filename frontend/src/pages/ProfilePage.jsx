@@ -198,7 +198,7 @@ const styles = {
   profilePicWrapper: { position: 'relative', textAlign: 'center' },
   profileImage: { width: '150px', height: '150px', borderRadius: '50%', objectFit: 'cover' },
   penIcon: {
-  position: 'absolute', bottom: '10px',  left: '300px', backgroundColor: '#fff', padding: '5px', borderRadius: '50%', boxShadow: '0 0 4px rgba(0,0,0,0.2)',
+  position: 'absolute', bottom: '10px',  left: '310px', backgroundColor: '#fff', padding: '5px', borderRadius: '50%', boxShadow: '0 0 4px rgba(0,0,0,0.2)',
   cursor: 'pointer',
 },
   saveButton: {
