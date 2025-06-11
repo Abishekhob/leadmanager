@@ -25,7 +25,7 @@ export default function AdminNavbar() {
   useEffect(() => {
  const fetchUnreadCount = async () => {
   try {
-    const response = await axios.get(`/api/notifications/unread-count`, {
+    const response = await axios.get(`/api/notifications/unread-count`, { //changed from fetch to axios call
       params: { userId }
     });
 
