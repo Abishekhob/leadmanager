@@ -23,9 +23,9 @@ public class CsvParser {
             }
 
             Lead lead = new Lead();
-            lead.setName(line[0]);
-            lead.setEmail(line[1]);
-            lead.setPhone(line[2]);
+            lead.setName(line.length > 0 ? line[0] : "");
+            lead.setEmail(line.length > 1 ? line[1] : "");
+            lead.setPhone(line.length > 2 ? line[2] : "");
             lead.setSource(line.length > 3 && !line[3].isEmpty() ? line[3] : "Manual");
             lead.setStatus(LeadStatus.NEW);
 
