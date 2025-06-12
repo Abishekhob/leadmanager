@@ -120,13 +120,28 @@ const CreateLeadModal = ({ show, onClose, initialData = null, onSuccess }) => {
           <input className="form-control mb-2" placeholder="Source" value={formData.source}
             onChange={e => setFormData({ ...formData, source: e.target.value })} />
 
-          <select className="form-control mb-2" value={formData.assignedTo}
-            onChange={e => setFormData({ ...formData, assignedTo: e.target.value })}>
-            <option key="default" value="">-- Assign to --</option>
-            {users.map(user => (
-              <option key={user.id} value={user.id}>{user.name}</option>
-            ))}
-          </select>
+          <div className="mb-2">
+  <label className="form-label">Assign to</label>
+  <div className="list-group" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+    {users.map(user => (
+      <div
+        key={user.id}
+        className={`list-group-item list-group-item-action d-flex align-items-center ${formData.assignedTo === user.id ? 'active' : ''}`}
+        style={{ cursor: 'pointer' }}
+        onClick={() => setFormData({ ...formData, assignedTo: user.id })}
+      >
+        <img
+          src={user.profile_picture ? `/uploads/profile_pictures/${user.profile_picture}` : '/default-profile.png'}
+          alt={user.name}
+          className="rounded-circle me-2"
+          style={{ width: '32px', height: '32px', objectFit: 'cover' }}
+        />
+        <span>{user.name}</span>
+      </div>
+    ))}
+  </div>
+</div>
+
 
           <textarea className="form-control mb-2" placeholder="Notes"
             value={formData.notes} onChange={e => setFormData({ ...formData, notes: e.target.value })} />
