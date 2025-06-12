@@ -132,7 +132,7 @@ const CreateLeadModal = ({ show, onClose, initialData = null, onSuccess }) => {
   <div className="list-group" style={{ maxHeight: '200px', overflowY: 'auto' }}>
     {users.map(user => {
       const imageUrl = user.profilePicture
-        ? `/uploads/profile_pictures/${user.profilePicture}`
+        ? `${import.meta.env.VITE_API_BASE_URL}/uploads/profile_pictures/${user.profilePicture}`
         : '/default-profile.png';
 
       return (
