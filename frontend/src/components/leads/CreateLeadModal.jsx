@@ -129,6 +129,29 @@ const CreateLeadModal = ({ show, onClose, initialData = null, onSuccess }) => {
 
       <div className="mb-2">
   <label className="form-label">Assign to</label>
+
+  {/* Selected user display */}
+  {formData.assignedTo && (
+    <div className="d-flex align-items-center mb-2 p-2 border rounded bg-light">
+      <img
+        src={
+          users.find(u => u.id === formData.assignedTo)?.profilePicture
+            ? `${import.meta.env.VITE_API_BASE_URL}/uploads/profile_pictures/${users.find(u => u.id === formData.assignedTo).profilePicture}`
+            : '/default-profile.png'
+        }
+        alt="Selected User"
+        className="rounded-circle me-2"
+        style={{ width: '32px', height: '32px', objectFit: 'cover' }}
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = '/default-profile.png';
+        }}
+      />
+      <span>{users.find(u => u.id === formData.assignedTo)?.name}</span>
+    </div>
+  )}
+
+  {/* Scrollable list of users */}
   <div className="list-group" style={{ maxHeight: '200px', overflowY: 'auto' }}>
     {users.map(user => {
       const imageUrl = user.profilePicture
@@ -158,6 +181,7 @@ const CreateLeadModal = ({ show, onClose, initialData = null, onSuccess }) => {
     })}
   </div>
 </div>
+
 
 
 
