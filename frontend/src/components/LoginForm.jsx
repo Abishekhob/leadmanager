@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // ✅ Added Link
+import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axiosInstance from '../axiosInstance';
 
 export default function LoginForm({ embedded = false, switchToRegister }) {
-
   const [form, setForm] = useState({ email: '', password: '' });
   const navigate = useNavigate();
 
@@ -14,13 +13,10 @@ export default function LoginForm({ embedded = false, switchToRegister }) {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     try {
       const response = await axiosInstance.post('/api/auth/login', form, {
         withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
       });
 
       const { token, role, userId } = response.data;
@@ -29,27 +25,30 @@ export default function LoginForm({ embedded = false, switchToRegister }) {
       localStorage.setItem("role", role);
       localStorage.setItem("userId", userId);
 
-      if (role === "ADMIN") {
-        navigate('/admin-dashboard');
-      } else if (role === 'USER' || role === 'PROPOSAL_CREATOR') {
-        navigate('/user-dashboard');
-      } else {
-        console.warn("⚠️ Unknown role, staying on login.");
-      }
-
+      if (role === "ADMIN") navigate('/admin-dashboard');
+      else if (role === 'USER' || role === 'PROPOSAL_CREATOR') navigate('/user-dashboard');
+      else console.warn("Unknown role");
     } catch (err) {
-      const errorMessage = err.response?.data?.message || 'Invalid email or password';
-      toast.error(errorMessage);
-      console.error("❌ Login failed:", err);
+      toast.error(err.response?.data?.message || 'Invalid email or password');
     }
   };
 
   return (
-    <div className="container mt-5 col-md-4">
-      <h3>Login</h3>
+    <div
+      className="p-4 rounded"
+      style={{
+        backgroundColor: 'rgba(255,255,255,0.1)',
+        backdropFilter: 'blur(10px)',
+        color: '#fff',
+        width: '100%',
+        maxWidth: '400px',
+        margin: '3rem auto',
+      }}
+    >
+      <h3 className="mb-4 text-center">Login</h3>
       <form onSubmit={handleLogin}>
         <input
-          className="form-control mb-2"
+          className="form-control mb-3"
           name="email"
           placeholder="Email"
           value={form.email}
@@ -57,7 +56,7 @@ export default function LoginForm({ embedded = false, switchToRegister }) {
           required
         />
         <input
-          className="form-control mb-2"
+          className="form-control mb-4"
           name="password"
           type="password"
           placeholder="Password"
@@ -65,18 +64,21 @@ export default function LoginForm({ embedded = false, switchToRegister }) {
           onChange={handleChange}
           required
         />
-        <button className="btn btn-primary w-100" type="submit">Login</button>
+        <button className="btn btn-primary w-100 mb-3" type="submit">Login</button>
       </form>
 
-     {!embedded ? (
-  <div className="mt-3 text-center">
-    Need to sign up? <Link to="/register">Register</Link>
-  </div>
-) : (
-  <div className="mt-3 text-center">
-    Need to sign up? <button className="btn btn-link p-0" onClick={switchToRegister}>Register</button>
-  </div>
-)}
-  </div>
+      {!embedded ? (
+        <div className="text-center">
+          Need to sign up? <Link to="/register" className="text-decoration-underline text-light">Register</Link>
+        </div>
+      ) : (
+        <div className="text-center">
+          Need to sign up?{' '}
+          <button className="btn btn-link p-0 text-white text-decoration-underline" onClick={switchToRegister}>
+            Register
+          </button>
+        </div>
+      )}
+    </div>
   );
 }

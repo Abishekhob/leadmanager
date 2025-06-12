@@ -4,7 +4,6 @@ import axios from '../axiosInstance';
 import { toast } from 'react-toastify';
 
 export default function RegisterForm({ embedded = false, switchToLogin }) {
-
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -23,48 +22,27 @@ export default function RegisterForm({ embedded = false, switchToLogin }) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneRegex = /^[0-9]{10}$/;
 
-    if (!form.name.trim()) {
-      toast.error('Name is required');
-      return false;
-    }
-
-    if (!emailRegex.test(form.email)) {
-      toast.error('Enter a valid email address');
-      return false;
-    }
-
-   if (!phoneRegex.test(form.phoneNumber)) {
-      toast.error('Enter a valid 10-digit phone number');
-      return false;
-    }
-
-    if (form.password.length < 6) {
-      toast.error('Password must be at least 6 characters');
-      return false;
-    }
-
-    if (form.password !== form.confirmPassword) {
-      toast.error('Passwords do not match');
-      return false;
-    }
+    if (!form.name.trim()) return toast.error('Name is required');
+    if (!emailRegex.test(form.email)) return toast.error('Enter a valid email');
+    if (!phoneRegex.test(form.phoneNumber)) return toast.error('Enter a valid 10-digit phone');
+    if (form.password.length < 6) return toast.error('Password must be at least 6 characters');
+    if (form.password !== form.confirmPassword) return toast.error('Passwords do not match');
 
     return true;
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
-
     if (!validateForm()) return;
 
     try {
       const payload = {
-  name: form.name.trim(),
-  email: form.email.trim(),
-  phoneNumber: form.phoneNumber.trim(),
-  password: form.password,
-  role: 'USER',
-};
-
+        name: form.name.trim(),
+        email: form.email.trim(),
+        phoneNumber: form.phoneNumber.trim(),
+        password: form.password,
+        role: 'USER',
+      };
 
       await axios.post('/api/users/register', payload);
       toast.success('Registered! Please login.');
@@ -75,25 +53,77 @@ export default function RegisterForm({ embedded = false, switchToLogin }) {
   };
 
   return (
-    <div className="container mt-5 col-md-4">
-      <h3>Register</h3>
+    <div
+      className="p-4 rounded"
+      style={{
+        backgroundColor: 'rgba(255,255,255,0.1)',
+        backdropFilter: 'blur(10px)',
+        color: '#fff',
+        width: '100%',
+        maxWidth: '400px',
+        margin: '3rem auto',
+      }}
+    >
+      <h3 className="mb-4 text-center">Register</h3>
       <form onSubmit={handleRegister}>
-        <input className="form-control mb-2" name="name" placeholder="Name" onChange={handleChange} value={form.name} required />
-        <input className="form-control mb-2" name="email" placeholder="Email" type="email" onChange={handleChange} value={form.email} required />
-        <input className="form-control mb-2" name="phoneNumber" placeholder="Phone" onChange={handleChange} value={form.phone} required />
-        <input className="form-control mb-2" name="password" type="password" placeholder="Password" onChange={handleChange} value={form.password} required />
-        <input className="form-control mb-3" name="confirmPassword" type="password" placeholder="Confirm Password" onChange={handleChange} value={form.confirmPassword} required />
-        <button className="btn btn-success w-100" type="submit">Register</button>
+        <input
+          className="form-control mb-3"
+          name="name"
+          placeholder="Name"
+          onChange={handleChange}
+          value={form.name}
+          required
+        />
+        <input
+          className="form-control mb-3"
+          name="email"
+          type="email"
+          placeholder="Email"
+          onChange={handleChange}
+          value={form.email}
+          required
+        />
+        <input
+          className="form-control mb-3"
+          name="phoneNumber"
+          placeholder="Phone"
+          onChange={handleChange}
+          value={form.phoneNumber}
+          required
+        />
+        <input
+          className="form-control mb-3"
+          name="password"
+          type="password"
+          placeholder="Password"
+          onChange={handleChange}
+          value={form.password}
+          required
+        />
+        <input
+          className="form-control mb-4"
+          name="confirmPassword"
+          type="password"
+          placeholder="Confirm Password"
+          onChange={handleChange}
+          value={form.confirmPassword}
+          required
+        />
+        <button className="btn btn-success w-100 mb-3" type="submit">Register</button>
       </form>
-    {!embedded ? (
-  <div className="mt-3 text-center">
-    Already a user? <Link to="/login">Login</Link>
-  </div>
-) : (
-  <div className="mt-3 text-center">
-    Already a user? <button className="btn btn-link p-0" onClick={switchToLogin}>Login</button>
-  </div>
-)}
+
+      {!embedded ? (
+        <div className="text-center">
+          Already a user? <Link to="/login" className="text-decoration-underline text-light">Login</Link>
+        </div>
+      ) : (
+        <div className="text-center">
+          Already a user?{' '}
+          <button className="btn btn-link p-0 text-white text-decoration-underline" onClick={switchToLogin}>
+            Login
+          </button>
+        </div>
+      )}
     </div>
   );
 }

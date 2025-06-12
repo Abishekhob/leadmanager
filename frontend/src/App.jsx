@@ -28,9 +28,7 @@ function App() {
         <ToastContainer position="top-right" autoClose={3000} />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/register" element={<RegisterForm />} />
-        
+                
         <Route
           path="/admin-dashboard"
           element={
