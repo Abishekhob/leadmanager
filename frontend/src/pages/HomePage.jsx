@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import LoginForm from './LoginForm'; // Adjust the path if needed
-import RegisterForm from './RegisterForm';
+import LoginForm from '../components/LoginForm';
+import RegisterForm from '../components/RegisterForm';
 
 function HomePage() {
   const [formType, setFormType] = useState(null); // 'login' | 'register' | null
