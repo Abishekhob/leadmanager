@@ -3,7 +3,8 @@ import { useNavigate, Link } from 'react-router-dom'; // ✅ Added Link
 import { toast } from 'react-toastify';
 import axiosInstance from '../axiosInstance';
 
-export default function LoginForm() {
+export default function LoginForm({ embedded = false, switchToRegister }) {
+
   const [form, setForm] = useState({ email: '', password: '' });
   const navigate = useNavigate();
 
@@ -67,10 +68,15 @@ export default function LoginForm() {
         <button className="btn btn-primary w-100" type="submit">Login</button>
       </form>
 
-      {/* ✅ Added Sign up link */}
-      <div className="mt-3 text-center">
-        Need to sign up? <Link to="/register">Register</Link>
-      </div>
-    </div>
+     {!embedded ? (
+  <div className="mt-3 text-center">
+    Need to sign up? <Link to="/register">Register</Link>
+  </div>
+) : (
+  <div className="mt-3 text-center">
+    Need to sign up? <button className="btn btn-link p-0" onClick={switchToRegister}>Register</button>
+  </div>
+)}
+  </div>
   );
 }

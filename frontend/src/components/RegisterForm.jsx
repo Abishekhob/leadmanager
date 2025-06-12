@@ -3,7 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from '../axiosInstance';
 import { toast } from 'react-toastify';
 
-export default function RegisterForm() {
+export default function RegisterForm({ embedded = false, switchToLogin }) {
+
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -84,9 +85,15 @@ export default function RegisterForm() {
         <input className="form-control mb-3" name="confirmPassword" type="password" placeholder="Confirm Password" onChange={handleChange} value={form.confirmPassword} required />
         <button className="btn btn-success w-100" type="submit">Register</button>
       </form>
-      <div className="mt-3 text-center">
-        Already a user? <Link to="/login">Login</Link>
-      </div>
+    {!embedded ? (
+  <div className="mt-3 text-center">
+    Already a user? <Link to="/login">Login</Link>
+  </div>
+) : (
+  <div className="mt-3 text-center">
+    Already a user? <button className="btn btn-link p-0" onClick={switchToLogin}>Login</button>
+  </div>
+)}
     </div>
   );
 }

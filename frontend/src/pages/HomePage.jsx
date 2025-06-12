@@ -1,33 +1,70 @@
-// pages/HomePage.jsx
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import LoginForm from './LoginForm'; // Adjust the path if needed
+import RegisterForm from './RegisterForm';
 
 function HomePage() {
+  const [formType, setFormType] = useState(null); // 'login' | 'register' | null
+
+  const closeForm = () => setFormType(null);
+
   return (
     <div className="container-fluid p-0">
       {/* Hero Banner */}
       <div
-        className="jumbotron text-center bg-dark text-white d-flex align-items-center justify-content-center"
+        className="jumbotron text-center bg-dark text-white d-flex align-items-center justify-content-center flex-column"
         style={{
-          height: '80vh',
+          minHeight: '80vh',
           backgroundImage: 'url(/banner.jpg)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
+          position: 'relative',
         }}
       >
         <div
           className="overlay text-white p-4 rounded"
-          style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}
+          style={{ backgroundColor: 'rgba(0,0,0,0.6)', width: '100%', maxWidth: '600px' }}
         >
           <h1 className="display-4">Welcome to LeadManager</h1>
           <p className="lead">Smart Lead & Task Management for Sales Teams</p>
+
           <div className="mt-4">
-            <Link to="/login" className="btn btn-primary me-3">
+            <button
+              className="btn btn-primary me-3"
+              onClick={() => setFormType('login')}
+            >
               Login
-            </Link>
-            <Link to="/register" className="btn btn-outline-light">
+            </button>
+            <button
+              className="btn btn-outline-light"
+              onClick={() => setFormType('register')}
+            >
               Register
-            </Link>
+            </button>
           </div>
+
+          {formType && (
+            <div className="bg-white text-dark p-4 mt-4 rounded position-relative">
+              <button
+                onClick={closeForm}
+                className="btn-close position-absolute top-0 end-0 m-2"
+                aria-label="Close"
+              ></button>
+
+              {formType === 'login' && (
+                <LoginForm
+                  embedded={true}
+                  switchToRegister={() => setFormType('register')}
+                />
+              )}
+
+              {formType === 'register' && (
+                <RegisterForm
+                  embedded={true}
+                  switchToLogin={() => setFormType('login')}
+                />
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -35,40 +72,21 @@ function HomePage() {
       <div className="container py-5">
         <h2 className="text-center mb-4">Key Features</h2>
         <div className="row text-center">
-          <div className="col-md-4 mb-4">
-            <i className="fas fa-user-cog fa-3x text-primary mb-3"></i>
+          {/* Add your actual features here */}
+          <div className="col-md-4 mb-3">
+            <h5>Project Management</h5>
+            <p>Manage leads, assign tasks, and track progress in one place.</p>
+          </div>
+          <div className="col-md-4 mb-3">
             <h5>Role-Based Access</h5>
-            <p>Admins, Proposal Creators, and Sales Users with task-specific privileges.</p>
+            <p>Admin and user features tailored to each role.</p>
           </div>
-          <div className="col-md-4 mb-4">
-            <i className="fas fa-random fa-3x text-success mb-3"></i>
-            <h5>Random Lead Assignment</h5>
-            <p>Distribute leads evenly among available salespeople in one click.</p>
-          </div>
-          <div className="col-md-4 mb-4">
-            <i className="fas fa-clock fa-3x text-warning mb-3"></i>
-            <h5>Follow-up Reminders</h5>
-            <p>Receive timely notifications 2 hours before scheduled follow-ups.</p>
-          </div>
-
-          <div className="col-md-4 mb-4">
-            <i className="fas fa-file-upload fa-3x text-info mb-3"></i>
-            <h5>Proposal Requests</h5>
-            <p>Sales users can request & track proposals; creators submit them for review.</p>
-          </div>
-          <div className="col-md-4 mb-4">
-            <i className="fas fa-filter fa-3x text-danger mb-3"></i>
-            <h5>Filterable Reports</h5>
-            <p>View and download lead performance reports in Excel & PDF formats.</p>
-          </div>
-          <div className="col-md-4 mb-4">
-            <i className="fas fa-layer-group fa-3x text-secondary mb-3"></i>
-            <h5>Stage-Based Workflow</h5>
-            <p>Move leads from New → Contacted → Follow-up → Proposal Sent → Closed.</p>
+          <div className="col-md-4 mb-3">
+            <h5>Performance Reports</h5>
+            <p>Generate and view performance metrics by team or individual.</p>
           </div>
         </div>
 
-        {/* Screenshot Preview */}
         <div className="text-center mt-5">
           <h4>See It in Action</h4>
           <img
@@ -84,4 +102,3 @@ function HomePage() {
 }
 
 export default HomePage;
-
