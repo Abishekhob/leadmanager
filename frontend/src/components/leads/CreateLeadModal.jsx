@@ -21,8 +21,7 @@ const CreateLeadModal = ({ show, onClose, initialData = null, onSuccess }) => {
   useEffect(() => {
   axios.get('/api/users/non-admin-users')
     .then(res => {
-      console.log("📥 Incoming Users from API:", res.data); // ✅ Console log here
-      setUsers(res.data);
+           setUsers(res.data);
     })
     .catch(err => {
       console.error("❌ Error fetching users:", err);
@@ -138,7 +137,7 @@ const CreateLeadModal = ({ show, onClose, initialData = null, onSuccess }) => {
         onClick={() => setFormData({ ...formData, assignedTo: user.id })}
       >
         <img
-          src={user.profile_picture ? `/uploads/profile_pictures/${user.profile_picture}` : '/default-profile.png'}
+          src={user.profile_picture ? `/uploads/profile_pictures/${user.profilePicture}` : '/default-profile.png'}
           alt={user.name}
           className="rounded-circle me-2"
           style={{ width: '32px', height: '32px', objectFit: 'cover' }}
