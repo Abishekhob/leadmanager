@@ -132,28 +132,27 @@ const handleUpdateCategory = async () => {
             <li className="list-group-item"><strong>Status:</strong> {lead.status}</li>
             <li className="list-group-item"><strong>Source:</strong> {lead.source}</li>
             <li className="list-group-item">
-  <strong>Assigned To:</strong>
-  {lead.assignedTo ? (
-    <div className="d-flex align-items-center mt-2 p-2 border rounded" style={{ maxWidth: '300px' }}>
-      <img
-        src={lead.assignedTo.profilePicture
-          ? `${import.meta.env.VITE_API_BASE_URL}/uploads/profile_pictures/${lead.assignedTo.profilePicture}`
-          : '/default-profile.png'}
-        alt={lead.assignedTo.name}
-        className="rounded-circle me-2"
-        style={{ width: '40px', height: '40px', objectFit: 'cover' }}
-        onError={(e) => {
-          e.target.onerror = null;
-          e.target.src = '/default-profile.png';
-        }}
-      />
-      <span>{lead.assignedTo.name}</span>
-    </div>
-  ) : (
-    <span className="ms-2 text-muted">Not assigned</span>
-  )}
-</li>
-
+              <strong>Assigned To:</strong>
+              {lead.assignedTo ? (
+                <div className="d-flex align-items-center mt-2 p-2 border rounded" style={{ maxWidth: '300px' }}>
+                  <img
+                    src={lead.assignedTo.profilePicture
+                      ? `${import.meta.env.VITE_API_BASE_URL}/uploads/profile_pictures/${lead.assignedTo.profilePicture}`
+                      : '/default-profile.png'}
+                    alt={lead.assignedTo.name}
+                    className="rounded-circle me-2"
+                    style={{ width: '40px', height: '40px', objectFit: 'cover' }}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = '/default-profile.png';
+                    }}
+                  />
+                  <span>{lead.assignedTo.name}</span>
+                </div>
+              ) : (
+                <span className="ms-2 text-muted">Not assigned</span>
+              )}
+            </li>
             <li className="list-group-item"><strong>Notes:</strong> {lead.notes}</li>
             <li className="list-group-item"><strong>Created:</strong> {new Date(lead.createdAt).toLocaleString()}</li>
             {lead.outcome && <li className="list-group-item"><strong>Outcome:</strong> {lead.outcome}</li>}
@@ -162,6 +161,29 @@ const handleUpdateCategory = async () => {
      {!lead.assignedTo && (
   <>
     <h5 className="mb-3">Assign Lead</h5>
+
+    {/* Selected user preview */}
+    {assignUserId && (
+      <div className="d-flex align-items-center mb-2 p-2 border rounded bg-light">
+        <img
+          src={
+            users.find(user => user.id === assignUserId)?.profilePicture
+              ? `${import.meta.env.VITE_API_BASE_URL}/uploads/profile_pictures/${users.find(user => user.id === assignUserId).profilePicture}`
+              : '/default-profile.png'
+          }
+          alt="Selected User"
+          className="rounded-circle me-2"
+          style={{ width: '32px', height: '32px', objectFit: 'cover' }}
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = '/default-profile.png';
+          }}
+        />
+        <span>{users.find(user => user.id === assignUserId)?.name}</span>
+      </div>
+    )}
+
+    {/* Scrollable list */}
     <div className="mb-2 list-group" style={{ maxHeight: '200px', overflowY: 'auto' }}>
       {users
         .filter(user => user.role !== "ADMIN" && user.name?.trim())
@@ -192,6 +214,7 @@ const handleUpdateCategory = async () => {
           );
         })}
     </div>
+
     <Button
       variant="primary"
       onClick={handleAssign}
