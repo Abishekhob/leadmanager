@@ -126,27 +126,38 @@ const CreateLeadModal = ({ show, onClose, initialData = null, onSuccess }) => {
           <input className="form-control mb-2" placeholder="Source" value={formData.source}
             onChange={e => setFormData({ ...formData, source: e.target.value })} />
 
-          <div className="mb-2">
+      <div className="mb-2">
   <label className="form-label">Assign to</label>
   <div className="list-group" style={{ maxHeight: '200px', overflowY: 'auto' }}>
-    {users.map(user => (
-      <div
-        key={user.id}
-        className={`list-group-item list-group-item-action d-flex align-items-center ${formData.assignedTo === user.id ? 'active' : ''}`}
-        style={{ cursor: 'pointer' }}
-        onClick={() => setFormData({ ...formData, assignedTo: user.id })}
-      >
-        <img
-          src={user.profile_picture ? `/uploads/profile_pictures/${user.profilePicture}` : '/default-profile.png'}
-          alt={user.name}
-          className="rounded-circle me-2"
-          style={{ width: '32px', height: '32px', objectFit: 'cover' }}
-        />
-        <span>{user.name}</span>
-      </div>
-    ))}
+    {users.map(user => {
+      const imageUrl = user.profilePicture
+        ? `/uploads/profile_pictures/${user.profilePicture}`
+        : '/default-profile.png';
+
+      return (
+        <div
+          key={user.id}
+          className={`list-group-item list-group-item-action d-flex align-items-center ${formData.assignedTo === user.id ? 'active' : ''}`}
+          style={{ cursor: 'pointer' }}
+          onClick={() => setFormData({ ...formData, assignedTo: user.id })}
+        >
+          <img
+            src={imageUrl}
+            alt={user.name}
+            className="rounded-circle me-2"
+            style={{ width: '32px', height: '32px', objectFit: 'cover' }}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = '/default-profile.png';
+            }}
+          />
+          <span>{user.name}</span>
+        </div>
+      );
+    })}
   </div>
 </div>
+
 
 
           <textarea className="form-control mb-2" placeholder="Notes"
