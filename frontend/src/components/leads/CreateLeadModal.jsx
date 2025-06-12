@@ -21,6 +21,7 @@ const CreateLeadModal = ({ show, onClose, initialData = null, onSuccess }) => {
   useEffect(() => {
   axios.get('/api/users/non-admin-users')
     .then(res => {
+        console.log("📥 Incoming Users from API:", res.data); 
            setUsers(res.data);
     })
     .catch(err => {
