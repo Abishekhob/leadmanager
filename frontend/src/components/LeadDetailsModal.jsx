@@ -132,8 +132,28 @@ const handleUpdateCategory = async () => {
             <li className="list-group-item"><strong>Status:</strong> {lead.status}</li>
             <li className="list-group-item"><strong>Source:</strong> {lead.source}</li>
             <li className="list-group-item">
-              <strong>Assigned To:</strong> {lead.assignedTo?.name || 'Not assigned'}
-            </li>
+  <strong>Assigned To:</strong>
+  {lead.assignedTo ? (
+    <div className="d-flex align-items-center mt-2 p-2 border rounded" style={{ maxWidth: '300px' }}>
+      <img
+        src={lead.assignedTo.profilePicture
+          ? `${import.meta.env.VITE_API_BASE_URL}/uploads/profile_pictures/${lead.assignedTo.profilePicture}`
+          : '/default-profile.png'}
+        alt={lead.assignedTo.name}
+        className="rounded-circle me-2"
+        style={{ width: '40px', height: '40px', objectFit: 'cover' }}
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = '/default-profile.png';
+        }}
+      />
+      <span>{lead.assignedTo.name}</span>
+    </div>
+  ) : (
+    <span className="ms-2 text-muted">Not assigned</span>
+  )}
+</li>
+
             <li className="list-group-item"><strong>Notes:</strong> {lead.notes}</li>
             <li className="list-group-item"><strong>Created:</strong> {new Date(lead.createdAt).toLocaleString()}</li>
             {lead.outcome && <li className="list-group-item"><strong>Outcome:</strong> {lead.outcome}</li>}
