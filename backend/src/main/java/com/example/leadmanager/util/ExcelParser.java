@@ -10,6 +10,35 @@ import java.util.List;
 
 public class ExcelParser {
 
+    private static String getCellValueAsString(Cell cell) {
+        if (cell == null) return "";
+
+        switch (cell.getCellType()) {
+            case STRING:
+                return cell.getStringCellValue();
+            case NUMERIC:
+                if (DateUtil.isCellDateFormatted(cell)) {
+                    return cell.getDateCellValue().toString();
+                } else {
+                    double numericValue = cell.getNumericCellValue();
+                    // Optional: format without decimal if it's a whole number
+                    if (numericValue == (long) numericValue) {
+                        return String.valueOf((long) numericValue);
+                    }
+                    return String.valueOf(numericValue);
+                }
+            case BOOLEAN:
+                return String.valueOf(cell.getBooleanCellValue());
+            case FORMULA:
+                return cell.getCellFormula();
+            case BLANK:
+                return "";
+            default:
+                return cell.toString();
+        }
+    }
+
+
     public static List<Lead> parse(InputStream inputStream) throws Exception {
         List<Lead> leads = new ArrayList<>();
 
@@ -26,9 +55,9 @@ public class ExcelParser {
             }
 
             Lead lead = new Lead();
-            lead.setName(row.getCell(0).getStringCellValue());
-            lead.setEmail(row.getCell(1).getStringCellValue());
-            lead.setPhone(row.getCell(2).getStringCellValue());
+            lead.setName(getCellValueAsString(row.getCell(0)));
+            lead.setEmail(getCellValueAsString(row.getCell(1)));
+            lead.setPhone(getCellValueAsString(row.getCell(2)));
 
             Cell sourceCell = row.getCell(3);
             lead.setSource(sourceCell != null && !sourceCell.toString().isEmpty() ? sourceCell.toString() : "Manual");
@@ -40,4 +69,5 @@ public class ExcelParser {
         workbook.close();
         return leads;
     }
+
 }
