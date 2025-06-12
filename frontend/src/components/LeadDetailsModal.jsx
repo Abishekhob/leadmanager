@@ -139,26 +139,49 @@ const handleUpdateCategory = async () => {
             {lead.outcome && <li className="list-group-item"><strong>Outcome:</strong> {lead.outcome}</li>}
           </ul>
 
-      {!lead.assignedTo && (
-          <>
-            <h5 className="mb-3">Assign Lead</h5>
-            <Form className="d-flex gap-2">
-            <Form.Select value={assignUserId} onChange={(e) => setAssignUserId(e.target.value)}>
-          <option value="">-- Select User --</option>
-          {users
-            .filter(user => user.role !== "ADMIN" && user.name?.trim()) // remove admins and empty names
-            .map(user => (
-              <option key={user.id} value={user.id}>{user.name}</option>
-            ))}
-            </Form.Select>
+     {!lead.assignedTo && (
+  <>
+    <h5 className="mb-3">Assign Lead</h5>
+    <div className="mb-2 list-group" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+      {users
+        .filter(user => user.role !== "ADMIN" && user.name?.trim())
+        .map(user => {
+          const imageUrl = user.profilePicture
+            ? `${import.meta.env.VITE_API_BASE_URL}/uploads/profile_pictures/${user.profilePicture}`
+            : '/default-profile.png';
 
-              <Button variant="primary" 
-              onClick={handleAssign}
-              disabled={!assignUserId}>
-                Assign</Button>
-            </Form>
-           </>
-       )}
+          return (
+            <div
+              key={user.id}
+              className={`list-group-item list-group-item-action d-flex align-items-center ${assignUserId === user.id ? 'active' : ''}`}
+              style={{ cursor: 'pointer' }}
+              onClick={() => setAssignUserId(user.id)}
+            >
+              <img
+                src={imageUrl}
+                alt={user.name}
+                className="rounded-circle me-2"
+                style={{ width: '32px', height: '32px', objectFit: 'cover' }}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = '/default-profile.png';
+                }}
+              />
+              <span>{user.name}</span>
+            </div>
+          );
+        })}
+    </div>
+    <Button
+      variant="primary"
+      onClick={handleAssign}
+      disabled={!assignUserId}
+    >
+      Assign
+    </Button>
+  </>
+)}
+
 
 {role === "USER" && (
           <>
