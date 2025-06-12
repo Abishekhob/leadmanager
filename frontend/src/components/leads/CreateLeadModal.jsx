@@ -19,9 +19,16 @@ const CreateLeadModal = ({ show, onClose, initialData = null, onSuccess }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-     axios.get('/api/users/non-admin-users')
-    .then(res => setUsers(res.data));
-  }, []);
+  axios.get('/api/users/non-admin-users')
+    .then(res => {
+      console.log("📥 Incoming Users from API:", res.data); // ✅ Console log here
+      setUsers(res.data);
+    })
+    .catch(err => {
+      console.error("❌ Error fetching users:", err);
+    });
+}, []);
+
 
   useEffect(() => {
     if (initialData && show) {
