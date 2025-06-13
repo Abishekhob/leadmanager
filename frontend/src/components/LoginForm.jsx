@@ -37,8 +37,8 @@ export default function LoginForm({ embedded = false, switchToRegister }) {
    <div
   className="p-4 rounded shadow"
   style={{
-    backgroundColor: 'rgba(0, 0, 0, 0.1)', // darker transparent background
-    backdropFilter: 'blur(10px)',
+    backgroundColor: 'transparent', // darker transparent background
+    backdropFilter: 'none',
     color: '#fff',
     width: '100%',
     maxWidth: '400px',

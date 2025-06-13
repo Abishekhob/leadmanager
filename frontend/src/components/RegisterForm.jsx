@@ -56,8 +56,8 @@ export default function RegisterForm({ embedded = false, switchToLogin }) {
    <div
   className="p-4 rounded shadow"
   style={{
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // darker transparent background
-    backdropFilter: 'blur(10px)',
+    backgroundColor: 'transparent', // darker transparent background
+    backdropFilter: 'none',
     color: '#fff',
     width: '100%',
     maxWidth: '400px',
