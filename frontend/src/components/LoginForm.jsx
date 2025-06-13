@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axiosInstance from '../axiosInstance';
+import './styles/LoginRegisterStyle.css';
 
 export default function LoginForm({ embedded = false, switchToRegister }) {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -34,8 +35,8 @@ export default function LoginForm({ embedded = false, switchToRegister }) {
   };
 
   return (
-   <div
-  className="p-4 rounded" // removed `shadow`
+  <div
+  className="p-4 rounded"
   style={{
     backgroundColor: 'transparent',
     backdropFilter: 'none',
@@ -48,15 +49,7 @@ export default function LoginForm({ embedded = false, switchToRegister }) {
   <h3 className="mb-4 text-center text-white">Login</h3>
   <form onSubmit={handleLogin}>
     <input
-      className="form-control mb-3"
-      style={{
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-        color: 'white',
-        border: '1px solid rgba(255,255,255,0.3)',
-        '::placeholder': {
-          color: '#e0e0e0',
-        },
-      }}
+      className="form-control mb-3 custom-input"
       name="email"
       placeholder="Email"
       value={form.email}
@@ -64,15 +57,7 @@ export default function LoginForm({ embedded = false, switchToRegister }) {
       required
     />
     <input
-      className="form-control mb-4"
-      style={{
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-        color: 'white',
-        border: '1px solid rgba(255,255,255,0.3)',
-        '::placeholder': {
-          color: '#e0e0e0',
-        },
-      }}
+      className="form-control mb-4 custom-input"
       name="password"
       type="password"
       placeholder="Password"
@@ -84,7 +69,7 @@ export default function LoginForm({ embedded = false, switchToRegister }) {
     <button
       className="btn w-100 mb-3"
       type="submit"
-      style={{ backgroundColor: '#FF5F1F', color: '#fff', border: 'none' }} // 🔶 your custom color
+      style={{ backgroundColor: '#FF5F1F', color: '#fff', border: 'none' }}
     >
       Login
     </button>
@@ -96,7 +81,7 @@ export default function LoginForm({ embedded = false, switchToRegister }) {
       <Link
         to="/register"
         className="text-decoration-underline"
-        style={{ color: '#FF5F1F' }} // same color as login button
+        style={{ color: '#FF5F1F' }}
       >
         Register
       </Link>
@@ -114,6 +99,7 @@ export default function LoginForm({ embedded = false, switchToRegister }) {
     </div>
   )}
 </div>
+
 
   );
 }

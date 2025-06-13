@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from '../axiosInstance';
 import { toast } from 'react-toastify';
+import './styles/LoginRegisterStyle.css';
 
 export default function RegisterForm({ embedded = false, switchToLogin }) {
   const [form, setForm] = useState({
