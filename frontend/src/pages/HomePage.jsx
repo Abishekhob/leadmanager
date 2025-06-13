@@ -50,9 +50,17 @@ function HomePage() {
 
           {/* Right: Form section */}
           {formType && (
-            <div
-              className="bg-white text-dark p-4 rounded position-relative"
-              style={{ flex: 1, minWidth: '350px', maxWidth: '400px' }}
+           <div
+              className="p-4 rounded position-relative"
+              style={{
+                flex: 1,
+                minWidth: '350px',
+                maxWidth: '400px',
+                backgroundColor: 'rgba(0,0,0,0.5)',
+                backdropFilter: 'blur(10px)',
+                color: '#fff',
+                boxShadow: '0 0 15px rgba(0,0,0,0.5)'
+              }}
             >
               <button
                 onClick={closeForm}
