@@ -9,8 +9,8 @@ import '../components/styles/AdminNavbar.css';
 
 
 const handleLogout = () => {
-  localStorage.removeItem('token');
-  window.location.href = '/login';
+  localStorage.clear();
+  window.location.href = '/';
 };
 
 export default function AdminNavbar() {

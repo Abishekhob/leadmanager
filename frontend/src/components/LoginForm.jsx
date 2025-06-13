@@ -34,43 +34,55 @@ export default function LoginForm({ embedded = false, switchToRegister }) {
   };
 
   return (
-    <div
-      className="p-4 rounded"
+   <div
+  className="p-4 rounded shadow"
+  style={{
+    backgroundColor: 'rgba(0, 0, 0, 0.6)', // darker transparent background
+    backdropFilter: 'blur(10px)',
+    color: '#fff',
+    width: '100%',
+    maxWidth: '400px',
+    margin: '3rem auto',
+  }}
+>
+  <h3 className="mb-4 text-center text-white">Login</h3> {/* same for Register */}
+  <form onSubmit={handleLogin}> {/* or handleRegister */}
+    <input
+      className="form-control mb-3"
       style={{
-        backgroundColor: 'rgba(255,255,255,0.1)',
-        backdropFilter: 'blur(10px)',
-        color: '#fff',
-        width: '100%',
-        maxWidth: '400px',
-        margin: '3rem auto',
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        color: 'white',
+        border: '1px solid rgba(255,255,255,0.3)',
       }}
-    >
-      <h3 className="mb-4 text-center">Login</h3>
-      <form onSubmit={handleLogin}>
-        <input
-          className="form-control mb-3"
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-          required
-        />
-        <input
-          className="form-control mb-4"
-          name="password"
-          type="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={handleChange}
-          required
-        />
-        <button className="btn btn-primary w-100 mb-3" type="submit">Login</button>
-      </form>
+      name="email"
+      placeholder="Email"
+      value={form.email}
+      onChange={handleChange}
+      required
+    />
+    {/* Repeat the same styling for other inputs */}
+    <input
+      className="form-control mb-4"
+      style={{
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        color: 'white',
+        border: '1px solid rgba(255,255,255,0.3)',
+      }}
+      name="password"
+      type="password"
+      placeholder="Password"
+      value={form.password}
+      onChange={handleChange}
+      required
+    />
+
+    <button className="btn btn-primary w-100 mb-3" type="submit">Login</button>
+  </form>
 
       {!embedded ? (
         <div className="text-center">
-          Need to sign up? <Link to="/register" className="text-decoration-underline text-light">Register</Link>
-        </div>
+    Need to sign up? <Link to="/register" className="text-decoration-underline text-light">Register</Link>
+  </div>
       ) : (
         <div className="text-center">
           Need to sign up?{' '}

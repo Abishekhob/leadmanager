@@ -53,17 +53,17 @@ export default function RegisterForm({ embedded = false, switchToLogin }) {
   };
 
   return (
-    <div
-      className="p-4 rounded"
-      style={{
-        backgroundColor: 'rgba(255,255,255,0.1)',
-        backdropFilter: 'blur(10px)',
-        color: '#fff',
-        width: '100%',
-        maxWidth: '400px',
-        margin: '3rem auto',
-      }}
-    >
+   <div
+  className="p-4 rounded shadow"
+  style={{
+    backgroundColor: 'rgba(0, 0, 0, 0.6)', // darker transparent background
+    backdropFilter: 'blur(10px)',
+    color: '#fff',
+    width: '100%',
+    maxWidth: '400px',
+    margin: '3rem auto',
+  }}
+>
       <h3 className="mb-4 text-center">Register</h3>
       <form onSubmit={handleRegister}>
         <input

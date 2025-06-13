@@ -94,11 +94,7 @@ function HomePage() {
             <p>Admins, Proposal Creators, and Sales Users with task-specific privileges.</p>
           </div>
 
-          <div className="col-md-4 mb-4">
-            <i className="fas fa-project-diagram fa-3x text-info mb-3"></i>
-            <h5>Project Management</h5>
-            <p>Manage leads, assign tasks, and track progress in one place.</p>
-          </div>
+          
 
           <div className="col-md-4 mb-4">
             <i className="fas fa-random fa-3x text-success mb-3"></i>
@@ -124,11 +120,7 @@ function HomePage() {
             <p>View and download lead performance reports in Excel & PDF formats.</p>
           </div>
 
-          <div className="col-md-4 mb-4">
-            <i className="fas fa-chart-line fa-3x text-dark mb-3"></i>
-            <h5>Performance Reports</h5>
-            <p>Generate and view performance metrics by team or individual.</p>
-          </div>
+      
         </div>
 
         <div className="text-center mt-5">

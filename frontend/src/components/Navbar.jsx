@@ -115,9 +115,8 @@ export default function Navbar({
                 <div className="modal-footer">
                   <button className="btn btn-secondary" onClick={() => setShowLogoutModal(false)}>Cancel</button>
                   <button className="btn btn-danger" onClick={() => {
-                    localStorage.removeItem('token');
-                    localStorage.removeItem('userId');
-                    window.location.href = '/login';
+                    localStorage.clear();
+                    window.location.href = '/';
                   }}>Logout</button>
                 </div>
               </div>
