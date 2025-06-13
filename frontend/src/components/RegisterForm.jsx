@@ -53,10 +53,10 @@ export default function RegisterForm({ embedded = false, switchToLogin }) {
   };
 
   return (
-   <div
-  className="p-4 rounded shadow"
+  <div
+  className="p-4 rounded"
   style={{
-    backgroundColor: 'transparent', // darker transparent background
+    backgroundColor: 'transparent',
     backdropFilter: 'none',
     color: '#fff',
     width: '100%',
@@ -64,66 +64,84 @@ export default function RegisterForm({ embedded = false, switchToLogin }) {
     margin: '3rem auto',
   }}
 >
-      <h3 className="mb-4 text-center">Register</h3>
-      <form onSubmit={handleRegister}>
-        <input
-          className="form-control mb-3"
-          name="name"
-          placeholder="Name"
-          onChange={handleChange}
-          value={form.name}
-          required
-        />
-        <input
-          className="form-control mb-3"
-          name="email"
-          type="email"
-          placeholder="Email"
-          onChange={handleChange}
-          value={form.email}
-          required
-        />
-        <input
-          className="form-control mb-3"
-          name="phoneNumber"
-          placeholder="Phone"
-          onChange={handleChange}
-          value={form.phoneNumber}
-          required
-        />
-        <input
-          className="form-control mb-3"
-          name="password"
-          type="password"
-          placeholder="Password"
-          onChange={handleChange}
-          value={form.password}
-          required
-        />
-        <input
-          className="form-control mb-4"
-          name="confirmPassword"
-          type="password"
-          placeholder="Confirm Password"
-          onChange={handleChange}
-          value={form.confirmPassword}
-          required
-        />
-        <button className="btn btn-success w-100 mb-3" type="submit">Register</button>
-      </form>
+  <h3 className="mb-4 text-center text-white">Register</h3>
+  <form onSubmit={handleRegister}>
+    <input
+      className="form-control mb-3 custom-input"
+      name="name"
+      placeholder="Name"
+      onChange={handleChange}
+      value={form.name}
+      required
+    />
+    <input
+      className="form-control mb-3 custom-input"
+      name="email"
+      type="email"
+      placeholder="Email"
+      onChange={handleChange}
+      value={form.email}
+      required
+    />
+    <input
+      className="form-control mb-3 custom-input"
+      name="phoneNumber"
+      placeholder="Phone"
+      onChange={handleChange}
+      value={form.phoneNumber}
+      required
+    />
+    <input
+      className="form-control mb-3 custom-input"
+      name="password"
+      type="password"
+      placeholder="Password"
+      onChange={handleChange}
+      value={form.password}
+      required
+    />
+    <input
+      className="form-control mb-4 custom-input"
+      name="confirmPassword"
+      type="password"
+      placeholder="Confirm Password"
+      onChange={handleChange}
+      value={form.confirmPassword}
+      required
+    />
+    <button
+      className="btn w-100 mb-3"
+      type="submit"
+      style={{ backgroundColor: '#FF5F1F', color: '#fff', border: 'none' }} // custom color
+    >
+      Register
+    </button>
+  </form>
 
-      {!embedded ? (
-        <div className="text-center">
-          Already a user? <Link to="/login" className="text-decoration-underline text-light">Login</Link>
-        </div>
-      ) : (
-        <div className="text-center">
-          Already a user?{' '}
-          <button className="btn btn-link p-0 text-white text-decoration-underline" onClick={switchToLogin}>
-            Login
-          </button>
-        </div>
-      )}
+  {!embedded ? (
+    <div className="text-center">
+      Already a user?{' '}
+      <Link
+        to="/login"
+        className="text-decoration-underline"
+        style={{ color: '#FF5F1F' }} // match button color
+      >
+        Login
+      </Link>
     </div>
+  ) : (
+    <div className="text-center">
+      Already a user?{' '}
+      <button
+        className="btn btn-link p-0 text-decoration-underline"
+        style={{ color: '#FF5F1F' }}
+        onClick={switchToLogin}
+      >
+        Login
+      </button>
+    </div>
+  )}
+</div>
+
   );
 }

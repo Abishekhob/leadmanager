@@ -35,9 +35,9 @@ export default function LoginForm({ embedded = false, switchToRegister }) {
 
   return (
    <div
-  className="p-4 rounded shadow"
+  className="p-4 rounded" // removed `shadow`
   style={{
-    backgroundColor: 'transparent', // darker transparent background
+    backgroundColor: 'transparent',
     backdropFilter: 'none',
     color: '#fff',
     width: '100%',
@@ -45,14 +45,17 @@ export default function LoginForm({ embedded = false, switchToRegister }) {
     margin: '3rem auto',
   }}
 >
-  <h3 className="mb-4 text-center text-white">Login</h3> {/* same for Register */}
-  <form onSubmit={handleLogin}> {/* or handleRegister */}
+  <h3 className="mb-4 text-center text-white">Login</h3>
+  <form onSubmit={handleLogin}>
     <input
       className="form-control mb-3"
       style={{
         backgroundColor: 'rgba(255, 255, 255, 0.1)',
         color: 'white',
         border: '1px solid rgba(255,255,255,0.3)',
+        '::placeholder': {
+          color: '#e0e0e0',
+        },
       }}
       name="email"
       placeholder="Email"
@@ -60,13 +63,15 @@ export default function LoginForm({ embedded = false, switchToRegister }) {
       onChange={handleChange}
       required
     />
-    {/* Repeat the same styling for other inputs */}
     <input
       className="form-control mb-4"
       style={{
         backgroundColor: 'rgba(255, 255, 255, 0.1)',
         color: 'white',
         border: '1px solid rgba(255,255,255,0.3)',
+        '::placeholder': {
+          color: '#e0e0e0',
+        },
       }}
       name="password"
       type="password"
@@ -76,21 +81,39 @@ export default function LoginForm({ embedded = false, switchToRegister }) {
       required
     />
 
-    <button className="btn btn-primary w-100 mb-3" type="submit">Login</button>
+    <button
+      className="btn w-100 mb-3"
+      type="submit"
+      style={{ backgroundColor: '#FF5F1F', color: '#fff', border: 'none' }} // 🔶 your custom color
+    >
+      Login
+    </button>
   </form>
 
-      {!embedded ? (
-        <div className="text-center">
-    Need to sign up? <Link to="/register" className="text-decoration-underline text-light">Register</Link>
-  </div>
-      ) : (
-        <div className="text-center">
-          Need to sign up?{' '}
-          <button className="btn btn-link p-0 text-white text-decoration-underline" onClick={switchToRegister}>
-            Register
-          </button>
-        </div>
-      )}
+  {!embedded ? (
+    <div className="text-center">
+      Need to sign up?{' '}
+      <Link
+        to="/register"
+        className="text-decoration-underline"
+        style={{ color: '#FF5F1F' }} // same color as login button
+      >
+        Register
+      </Link>
     </div>
+  ) : (
+    <div className="text-center">
+      Need to sign up?{' '}
+      <button
+        className="btn btn-link p-0 text-decoration-underline"
+        style={{ color: '#FF5F1F' }}
+        onClick={switchToRegister}
+      >
+        Register
+      </button>
+    </div>
+  )}
+</div>
+
   );
 }
