@@ -38,14 +38,14 @@ const ProposalsView = ({
                       <strong>📎 Reference:</strong>{' '}
                       {/\.(jpg|jpeg|png|gif)$/i.test(p.referenceFilePath) ? (
                         <img
-                          src={`http://localhost:8080/${fixPath(p.referenceFilePath)}`}
+                          src={`${import.meta.env.VITE_API_BASE_URL}/${fixPath(p.referenceFilePath)}`}
                           alt="Reference"
                           className="img-thumbnail mt-2"
                           style={{ maxWidth: '200px' }}
                         />
                       ) : (
                         <a
-                          href={`http://localhost:8080/${fixPath(p.referenceFilePath)}`}
+                          href={`${import.meta.env.VITE_API_BASE_URL}/${fixPath(p.referenceFilePath)}`}
                           target="_blank"
                           rel="noreferrer"
                           className="link-primary"
@@ -60,7 +60,7 @@ const ProposalsView = ({
                     <div className="mb-2">
                       <strong>📄 Uploaded Proposal:</strong>{' '}
                       <a
-                        href={`http://localhost:8080/${fixPath(p.proposalFilePath)}`}
+                        href={`${import.meta.env.VITE_API_BASE_URL}/${fixPath(p.proposalFilePath)}`}
                         target="_blank"
                         rel="noreferrer"
                         className="link-primary"
@@ -113,14 +113,14 @@ const ProposalsView = ({
                     <strong>📎 Reference:</strong>{' '}
                     {/\.(jpg|jpeg|png|gif)$/i.test(p.referenceFilePath) ? (
                       <img
-                        src={`http://localhost:8080/${fixPath(p.referenceFilePath)}`}
+                        src={`${import.meta.env.VITE_API_BASE_URL}/${fixPath(p.referenceFilePath)}`}
                         alt="Reference"
                         className="img-thumbnail mt-2"
                         style={{ maxWidth: '200px' }}
                       />
                     ) : (
                       <a
-                        href={`http://localhost:8080/${fixPath(p.referenceFilePath)}`}
+                        href={`${import.meta.env.VITE_API_BASE_URL}/${fixPath(p.referenceFilePath)}`}
                         target="_blank"
                         rel="noreferrer"
                         className="link-primary"
@@ -146,14 +146,14 @@ const ProposalsView = ({
                     <strong>📎 Uploaded Proposal:</strong>{' '}
                     {/\.(jpg|jpeg|png|gif)$/i.test(p.proposalFilePath) ? (
                       <img
-                        src={`http://localhost:8080/${fixPath(p.proposalFilePath)}`}
+                        src={`${import.meta.env.VITE_API_BASE_URL}/${fixPath(p.proposalFilePath)}`}
                         alt="Proposal"
                         className="img-thumbnail mt-2"
                         style={{ maxWidth: '200px' }}
                       />
                     ) : (
                       <a
-                        href={`http://localhost:8080/${fixPath(p.proposalFilePath)}`}
+                        href={`${import.meta.env.VITE_API_BASE_URL}/${fixPath(p.proposalFilePath)}`}
                         target="_blank"
                         rel="noreferrer"
                         className="link-primary"

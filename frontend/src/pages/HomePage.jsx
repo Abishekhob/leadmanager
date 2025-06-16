@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
+import ImageTextSlider from '../components/ImageTextSlider';
 
 function HomePage() {
   const [formType, setFormType] = useState(null); // 'login' | 'register' | null
@@ -131,15 +132,10 @@ function HomePage() {
       
         </div>
 
-        <div className="text-center mt-5">
-          <h4>See It in Action</h4>
-          <img
-            src="/screenshot.png"
-            alt="App Screenshot"
-            className="img-fluid rounded shadow mt-3"
-            style={{ maxWidth: '80%' }}
-          />
-        </div>
+        <div>
+      <ImageTextSlider />
+    </div>
+
       </div>
     </div>
   );

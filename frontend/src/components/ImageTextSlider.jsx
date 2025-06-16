@@ -14,7 +14,7 @@ const sliderData = [
     text: 'Admins can disable/delete users, promote them to proposal creators or admins, invite new users via email, and change user passwords.',
   },
   {
-    image: '/images/reports.png',
+    image: '/images/reports.png',//
     text: 'Admins can generate detailed reports, filter by category, status, or user, and export them in Excel or PDF.',
   },
   {
@@ -26,7 +26,7 @@ const sliderData = [
     text: 'Clicking a lead opens its full details, including past activity, status updates, and follow-up logs.',
   },
   {
-    image: '/images/proposals.png',
+    image: '/images/proposals.png',//
     text: 'Users assign proposal requests to creators. Proposal creators can submit, and users can mark them as completed.',
   },
 
