@@ -100,7 +100,7 @@ const ProposalsView = ({
             <div key={p.id} className="card mb-4 shadow border">
               <div className="card-body">
                 <p>
-                  📬 Proposal request from <strong>{p.requestedBy?.name || 'Someone'}</strong> on{' '}
+                  📬 Proposal request from <strong>{p.requestedByName || 'Someone'}</strong> on{' '}
                   <small className="text-muted">{new Date(p.createdAt).toLocaleString()}</small>
                 </p>
 
