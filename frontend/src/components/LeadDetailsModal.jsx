@@ -271,7 +271,7 @@ const handleUpdateCategory = async () => {
           <>
             <div>🖼️ Image:</div>
             <img
-              src={`http://localhost:8080/files/${activity.fileUrl}`}
+              src={`${import.meta.env.VITE_API_BASE_URL}/files/${activity.fileUrl}`}
               alt="Preview"
               style={{ maxWidth: '100%', maxHeight: '150px' }}
             />
@@ -284,7 +284,7 @@ const handleUpdateCategory = async () => {
             <video
               controls
               style={{ maxWidth: '100%', maxHeight: '300px' }}
-              src={`http://localhost:8080/files/${activity.fileUrl}`}
+              src={`${import.meta.env.VITE_API_BASE_URL}/files/${activity.fileUrl}`}
             />
           </>
         )}
@@ -293,7 +293,7 @@ const handleUpdateCategory = async () => {
           <>
             <div>📄 PDF:</div>
             <iframe
-              src={`http://localhost:8080/files/${activity.fileUrl}`}
+              src={`${import.meta.env.VITE_API_BASE_URL}/files/${activity.fileUrl}`}
               style={{ width: '100%', height: '300px', border: 'none' }}
               title="PDF Preview"
             />
@@ -304,7 +304,7 @@ const handleUpdateCategory = async () => {
           <>
             <div>📄 Text File:</div>
             <iframe
-              src={`http://localhost:8080/files/${activity.fileUrl}`}
+              src={`${import.meta.env.VITE_API_BASE_URL}/files/${activity.fileUrl}`}
               style={{ width: '100%', height: '150px', border: '1px solid #ccc' }}
               title="Text Preview"
             />
@@ -315,7 +315,7 @@ const handleUpdateCategory = async () => {
 
     {/* ✅ Always show download button below the preview or alone */}
     <a
-      href={`http://localhost:8080/files/${activity.fileUrl}`}
+      href={`${import.meta.env.VITE_API_BASE_URL}/files/${activity.fileUrl}`}
       download={activity.fileUrl.split('/').pop()}
       target="_blank"
       rel="noopener noreferrer"
