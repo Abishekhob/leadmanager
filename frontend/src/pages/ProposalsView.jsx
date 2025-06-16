@@ -105,7 +105,7 @@ const ProposalsView = ({
                 </p>
 
                  <p><strong>Lead name:</strong> {p.leadName || 'N/A'}</p>
-\begin{itemize}   
+  
                 {p.notes && <p className="text-muted">📝 {p.notes}</p>}
 
                 {p.referenceFilePath && (
