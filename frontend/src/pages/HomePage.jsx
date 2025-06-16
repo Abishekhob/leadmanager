@@ -71,10 +71,13 @@ function HomePage() {
               }}
             >
               <button
-                onClick={closeForm}
-                className="btn-close position-absolute top-0 end-0 m-2"
-                aria-label="Close"
-              ></button>
+  onClick={closeForm}
+  className="custom-close-btn position-absolute top-0 end-0 m-2"
+  aria-label="Close"
+>
+  &times;
+</button>
+
 
               {formType === 'login' && (
                 <LoginForm
