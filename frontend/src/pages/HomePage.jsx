@@ -2,6 +2,7 @@ import { useState } from 'react';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
 import ImageTextSlider from '../components/ImageTextSlider';
+import '../components/styles/HomePage.css';
 
 function HomePage() {
   const [formType, setFormType] = useState(null); // 'login' | 'register' | null
@@ -34,18 +35,24 @@ function HomePage() {
             <h1 className="display-4">Welcome to LeadManager</h1>
             <p className="lead">Smart Lead & Task Management for Sales Teams</p>
             <div className="mt-4">
-              <button
-                className="btn btn-primary me-3"
-                onClick={() => setFormType('login')}
-              >
-                Login
-              </button>
-              <button
-                className="btn btn-outline-light"
-                onClick={() => setFormType('register')}
-              >
-                Register
-              </button>
+            {/* Show buttons only if no form is active */}
+{!formType && (
+  <div className="mt-4 d-flex gap-3">
+    <button
+      className="custom-btn login-btn"
+      onClick={() => setFormType('login')}
+    >
+      Login
+    </button>
+    <button
+      className="custom-btn register-btn"
+      onClick={() => setFormType('register')}
+    >
+      Register
+    </button>
+  </div>
+)}
+
             </div>
           </div>
 

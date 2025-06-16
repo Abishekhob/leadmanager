@@ -1,0 +1,51 @@
+.custom-btn {
+  padding: 10px 24px;
+  font-size: 1rem;
+  border: 2px solid white;
+  background-color: transparent;
+  color: white;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.custom-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: white;
+  z-index: -1;
+  transition: left 0.3s ease;
+}
+
+.custom-btn:hover::before {
+  left: 0;
+}
+
+.custom-btn:hover {
+  color: #000;
+}
+
+.login-btn {
+  border-color: #0d6efd;
+  color: #0d6efd;
+}
+
+.login-btn::before {
+  background-color: #0d6efd;
+}
+
+.register-btn {
+  border-color: #198754;
+  color: #198754;
+}
+
+.register-btn::before {
+  background-color: #198754;
+}
