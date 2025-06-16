@@ -61,7 +61,7 @@ const ReportPage = () => {
     <>
       <AdminNavbar />
       <div className="container mt-4">
-        <h1 className="mb-4">Reports Dashboard</h1>
+       
 
         <LeadReportTable
           users={users}
