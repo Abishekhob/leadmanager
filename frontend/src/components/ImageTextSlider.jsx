@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import './styles/ImageTextSlider.css';
 
 const sliderData = [
   {
@@ -14,7 +15,7 @@ const sliderData = [
     text: 'Admins can disable/delete users, promote them to proposal creators or admins, invite new users via email, and change user passwords.',
   },
   {
-    image: '/images/reports.png',//
+    image: '/images/reports.png',
     text: 'Admins can generate detailed reports, filter by category, status, or user, and export them in Excel or PDF.',
   },
   {
@@ -26,33 +27,43 @@ const sliderData = [
     text: 'Clicking a lead opens its full details, including past activity, status updates, and follow-up logs.',
   },
   {
-    image: '/images/proposals.png',//
+    image: '/images/proposals.png',
     text: 'Users assign proposal requests to creators. Proposal creators can submit, and users can mark them as completed.',
   },
-
- 
   {
     image: '/images/profile-page.png',
     text: 'The profile page shows the user’s name, email, and phone. Users can add a bio and change their profile picture.',
   },
 ];
 
-
 const ImageTextSlider = () => {
   const [index, setIndex] = useState(0);
+  const [fade, setFade] = useState(true);
 
-  const handleNext = () => {
-    setIndex((prev) => (prev + 1) % sliderData.length);
-  };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFade(false); // trigger fade-out
+      setTimeout(() => {
+        setIndex((prev) => (prev + 1) % sliderData.length);
+        setFade(true); // fade-in
+      }, 300); // match fade-out time
+    }, 6000);
 
-  const handlePrev = () => {
-    setIndex((prev) => (prev - 1 + sliderData.length) % sliderData.length);
+    return () => clearInterval(interval);
+  }, []);
+
+  const goToSlide = (i) => {
+    setFade(false);
+    setTimeout(() => {
+      setIndex(i);
+      setFade(true);
+    }, 300);
   };
 
   return (
     <div className="container mt-5">
       <h4 className="text-center mb-4">See It in Action</h4>
-      <div className="row align-items-center">
+      <div className={`row align-items-center slider-fade ${fade ? 'fade-in' : 'fade-out'}`}>
         <div className="col-md-6 text-center mb-4 mb-md-0">
           <img
             src={sliderData[index].image}
@@ -63,15 +74,18 @@ const ImageTextSlider = () => {
         </div>
         <div className="col-md-6">
           <p style={{ fontSize: '1.1rem' }}>{sliderData[index].text}</p>
-          <div className="d-flex gap-3 mt-3">
-            <button className="btn btn-outline-secondary" onClick={handlePrev}>
-              Previous
-            </button>
-            <button className="btn btn-primary" onClick={handleNext}>
-              Next
-            </button>
-          </div>
         </div>
+      </div>
+
+      {/* Dots */}
+      <div className="text-center mt-3">
+        {sliderData.map((_, i) => (
+          <span
+            key={i}
+            className={`dot ${i === index ? 'active' : ''}`}
+            onClick={() => goToSlide(i)}
+          ></span>
+        ))}
       </div>
     </div>
   );
