@@ -2,7 +2,9 @@ package com.example.leadmanager.controller;
 
 import com.example.leadmanager.dto.LoginRequest;
 import com.example.leadmanager.dto.LoginResponse;
+import com.example.leadmanager.dto.RegisterAdminRequest;
 import com.example.leadmanager.model.User;
+import com.example.leadmanager.model.enums.Role;
 import com.example.leadmanager.repository.UserRepository;
 import com.example.leadmanager.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,6 +25,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
@@ -50,6 +54,21 @@ public class AuthController {
             e.printStackTrace();  // show full error in logs
             return ResponseEntity.status(403).body("Authentication failed");
         }
+    }
+
+    // ✅ Register admin endpoint
+    @PostMapping("/register-admin")
+    public ResponseEntity<?> registerAdmin(@RequestBody RegisterAdminRequest request) {
+
+        User admin = new User();
+        admin.setName(request.getName());
+        admin.setEmail(request.getEmail());
+        admin.setPassword(passwordEncoder.encode(request.getPassword()));
+        admin.setRole(Role.ADMIN);
+
+        userRepository.save(admin);
+
+        return ResponseEntity.status(201).body("Admin created successfully");
     }
 
 }
