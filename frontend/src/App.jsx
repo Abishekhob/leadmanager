@@ -62,6 +62,8 @@ function App() {
           } 
         />
 
+         <Route path="/create-admin" element={<AdminRegisterForm />} />
+
       </Routes>
     </Router>
     </>
