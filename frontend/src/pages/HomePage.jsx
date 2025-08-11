@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaLayerGroup, FaUserCog, FaRandom, FaClock, FaFileUpload, FaFilter, FaTimes } from 'react-icons/fa';
+import { FaLayerGroup, FaUserCog, FaRandom, FaClock, FaFileUpload, FaFilter, FaTimes, FaLinkedin, FaGithub, FaEnvelope } from 'react-icons/fa';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
 import ImageTextSlider from '../components/ImageTextSlider';
@@ -135,6 +135,24 @@ export default function HomePage() {
       <div className="slider-section">
         <ImageTextSlider />
       </div>
+
+      {/* Footer Section */}
+      <footer className="app-footer">
+        <div className="footer-content">
+          <p className="footer-copyright">&copy; {new Date().getFullYear()} LeadManager. All rights reserved.</p>
+          <div className="footer-social-links">
+            <a href="mailto:abishekhjuve@gmail.com" target="_blank" rel="noopener noreferrer" aria-label="Email">
+              <FaEnvelope />
+            </a>
+            <a href="https://www.linkedin.com/in/abishekhob/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+              <FaLinkedin />
+            </a>
+            <a href="https://github.com/Abishekhob/leadmanager" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+              <FaGithub />
+            </a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
