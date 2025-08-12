@@ -191,7 +191,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .demo-title {
   font-size: 1.25rem;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem; /* Increased margin for better separation */
   color: var(--heading-color);
   text-align: center;
   position: relative;
@@ -209,14 +209,14 @@ h1, h2, h3, h4, h5, h6 {
 
 .demo-cards-wrapper {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Auto-fit grid for responsiveness */
   gap: 1.5rem;
 }
 
 .demo-card {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem; /* Increased gap for better spacing */
   background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
   padding: 1.5rem;
@@ -251,14 +251,19 @@ h1, h2, h3, h4, h5, h6 {
 .demo-credentials {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem; /* Increased gap for better spacing between credentials */
 }
 
 .credential-item {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column; /* Stack label and value for better mobile layout */
+  gap: 0.25rem;
   padding: 0.5rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.credential-item:first-of-type {
+  border-top: none; /* No top border for the first item */
 }
 
 .credential-label {
@@ -269,6 +274,7 @@ h1, h2, h3, h4, h5, h6 {
 .credential-value-wrapper {
   display: flex;
   align-items: center;
+  justify-content: space-between; /* Space out value and copy button */
   gap: 0.5rem;
 }
 
@@ -276,19 +282,27 @@ h1, h2, h3, h4, h5, h6 {
   font-family: monospace;
   font-size: 0.9rem;
   color: var(--text-color);
+  word-break: break-all; /* Prevent long strings from overflowing */
 }
 
 .credential-value-wrapper button {
-  background: none;
+  background: rgba(255, 255, 255, 0.1); /* Subtle background for the button */
   border: none;
   color: var(--text-color);
   cursor: pointer;
   font-size: 0.8rem;
-  transition: color 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease;
   position: relative;
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0; /* Prevents button from shrinking */
 }
 
 .credential-value-wrapper button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
   color: var(--primary-color);
 }
 
@@ -410,4 +424,18 @@ h1, h2, h3, h4, h5, h6 {
 
 .footer-social-links a:hover {
   color: var(--primary-color);
+}
+
+/* Mobile adjustments for Demo Logins */
+@media (max-width: 768px) {
+  .credential-item {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+  .credential-value {
+    flex-grow: 1; /* Allow text to grow */
+    word-break: break-word; /* Better word-breaking on small screens */
+  }
 }
