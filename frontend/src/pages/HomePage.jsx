@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaLayerGroup, FaUserCog, FaRandom, FaClock, FaFileUpload, FaFilter, FaTimes, FaLinkedin, FaGithub, FaEnvelope } from 'react-icons/fa';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
 import ImageTextSlider from '../components/ImageTextSlider';
+import DemoLogins from '../components/DemoLogins';
 import './style/HomePage.css';
 
 const features = [
@@ -106,6 +107,8 @@ export default function HomePage() {
                 </button>
               </motion.div>
             )}
+            {/* Demo Logins Section */}
+            {!formType && <DemoLogins />}
           </div>
           <AnimatePresence>{formType && <FormCard formType={formType} setFormType={setFormType} />}</AnimatePresence>
         </div>
