@@ -6,9 +6,9 @@ import RegisterForm from '../components/RegisterForm';
 import ImageTextSlider from '../components/ImageTextSlider';
 import './style/HomePage.css';
 
-// Component for the Demo Logins - Placed outside the main component for clarity
+// Component for the Demo Logins
 const DemoLogins = () => {
-  const [copied, setCopied] = useState(null); // 'admin-email' or 'user-password'
+  const [copied, setCopied] = useState(null);
 
   const copyToClipboard = (text, type) => {
     navigator.clipboard.writeText(text).then(() => {
@@ -24,11 +24,11 @@ const DemoLogins = () => {
 
   return (
     <motion.div
-      className="demo-logins-container"
+      className="demo-logins-card"
       initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 20 }}
       transition={{ delay: 0.2, duration: 0.5 }}
-      viewport={{ once: true }}
     >
       <h4 className="demo-title">Or try a demo account:</h4>
       <div className="demo-cards-wrapper">
@@ -89,32 +89,6 @@ const DemoLogins = () => {
   );
 };
 
-// Features data, variants, and FormCard remain the same
-const features = [
-  { icon: <FaLayerGroup />, title: 'Stage-Based Workflow', description: 'Move leads from New → Contacted → Follow-up → Proposal Sent → Closed.' },
-  { icon: <FaUserCog />, title: 'Role-Based Access', description: 'Admins, Proposal Creators, and Sales Users with task-specific privileges.' },
-  { icon: <FaRandom />, title: 'Random Lead Assignment', description: 'Distribute leads evenly among available salespeople in one click.' },
-  { icon: <FaClock />, title: 'Follow-up Reminders', description: 'Receive timely notifications 2 hours before scheduled follow-ups.' },
-  { icon: <FaFileUpload />, title: 'Proposal Requests', description: 'Sales users can request & track proposals; creators submit them for review.' },
-  { icon: <FaFilter />, title: 'Filterable Reports', description: 'View and download lead performance reports in Excel & PDF formats.' },
-];
-
-const staggerVariants = {
-  initial: { opacity: 0, y: 20 },
-  animate: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-const itemVariants = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-};
-
 const FormCard = ({ formType, setFormType }) => {
   return (
     <motion.div
@@ -155,7 +129,54 @@ const FormCard = ({ formType, setFormType }) => {
     </motion.div>
   );
 };
+
+// New wrapper component for the modal content
+const FormContainer = ({ formType, setFormType }) => {
+  return (
+    <div className="form-container">
+      <FormCard formType={formType} setFormType={setFormType} />
+      <AnimatePresence>
+        {formType === 'login' && (
+          <motion.div
+            key="demo-logins"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <DemoLogins />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
   
+const features = [
+  { icon: <FaLayerGroup />, title: 'Stage-Based Workflow', description: 'Move leads from New → Contacted → Follow-up → Proposal Sent → Closed.' },
+  { icon: <FaUserCog />, title: 'Role-Based Access', description: 'Admins, Proposal Creators, and Sales Users with task-specific privileges.' },
+  { icon: <FaRandom />, title: 'Random Lead Assignment', description: 'Distribute leads evenly among available salespeople in one click.' },
+  { icon: <FaClock />, title: 'Follow-up Reminders', description: 'Receive timely notifications 2 hours before scheduled follow-ups.' },
+  { icon: <FaFileUpload />, title: 'Proposal Requests', description: 'Sales users can request & track proposals; creators submit them for review.' },
+  { icon: <FaFilter />, title: 'Filterable Reports', description: 'View and download lead performance reports in Excel & PDF formats.' },
+];
+
+const staggerVariants = {
+  initial: { opacity: 0, y: 20 },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+};
+
 export default function HomePage() {
   const [formType, setFormType] = useState(null);
 
@@ -193,23 +214,12 @@ export default function HomePage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              <FormCard formType={formType} setFormType={setFormType} />
+              <FormContainer formType={formType} setFormType={setFormType} />
             </motion.div>
           )}
         </AnimatePresence>
       </motion.div>
       
-      {/* Demo Logins Section - New, dedicated section */}
-      <motion.section
-        className="demo-section"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        viewport={{ once: true }}
-      >
-        <DemoLogins />
-      </motion.section>
-
       {/* Features Section */}
       <div className="features-section">
         <h2 className="section-title">Key Features</h2>
