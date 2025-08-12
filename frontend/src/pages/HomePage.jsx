@@ -6,7 +6,7 @@ import RegisterForm from '../components/RegisterForm';
 import ImageTextSlider from '../components/ImageTextSlider';
 import './style/HomePage.css';
 
-// Component for the Demo Logins
+// Component for the Demo Logins - Placed outside the main component for clarity
 const DemoLogins = () => {
   const [copied, setCopied] = useState(null); // 'admin-email' or 'user-password'
 
@@ -26,8 +26,9 @@ const DemoLogins = () => {
     <motion.div
       className="demo-logins-container"
       initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.6 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.2, duration: 0.5 }}
+      viewport={{ once: true }}
     >
       <h4 className="demo-title">Or try a demo account:</h4>
       <div className="demo-cards-wrapper">
@@ -88,6 +89,7 @@ const DemoLogins = () => {
   );
 };
 
+// Features data, variants, and FormCard remain the same
 const features = [
   { icon: <FaLayerGroup />, title: 'Stage-Based Workflow', description: 'Move leads from New → Contacted → Follow-up → Proposal Sent → Closed.' },
   { icon: <FaUserCog />, title: 'Role-Based Access', description: 'Admins, Proposal Creators, and Sales Users with task-specific privileges.' },
@@ -173,45 +175,40 @@ export default function HomePage() {
               <span>LeadManager</span>
             </h1>
             <p className="hero-subtitle">Smart Lead & Task Management for Sales Teams</p>
-            <AnimatePresence>
-              {!formType && (
-                <motion.div
-                  className="hero-buttons"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 20 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <button onClick={() => setFormType('login')} className="hero-btn primary-btn">
-                    Login
-                  </button>
-                  <button onClick={() => setFormType('register')} className="hero-btn secondary-btn">
-                    Register
-                  </button>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-          <div className="form-content">
-            <AnimatePresence mode="wait">
-              {formType ? (
-                <motion.div
-                  key="form-container"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.3 }}
-                  className="form-container"
-                >
-                  <FormCard formType={formType} setFormType={setFormType} />
-                </motion.div>
-              ) : (
-                <DemoLogins />
-              )}
-            </AnimatePresence>
+            <div className="hero-buttons">
+              <button onClick={() => setFormType('login')} className="hero-btn primary-btn">
+                Login
+              </button>
+              <button onClick={() => setFormType('register')} className="hero-btn secondary-btn">
+                Register
+              </button>
+            </div>
           </div>
         </div>
+        <AnimatePresence>
+          {formType && (
+            <motion.div
+              className="form-overlay"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <FormCard formType={formType} setFormType={setFormType} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
+      
+      {/* Demo Logins Section - New, dedicated section */}
+      <motion.section
+        className="demo-section"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        viewport={{ once: true }}
+      >
+        <DemoLogins />
+      </motion.section>
 
       {/* Features Section */}
       <div className="features-section">
